@@ -1,0 +1,74 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+  :root {
+    --nexus-admin-primary: #6366f1;
+    --nexus-admin-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+  }
+  .nexus-admin-launch-btn {
+    background: var(--nexus-admin-gradient);
+    color: #ffffff !web-kit-text;
+    color: #ffffff !important;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 18px rgba(99, 102, 241, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    letter-spacing: 0.3px;
+    margin-left: 18px;
+    vertical-align: middle;
+  }
+  .nexus-admin-launch-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+    color: #ffffff !important;
+  }
+  .nexus-pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 10px #10b981;
+    animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+  }
+</style>
+{% endblock %}
+
+{% block branding %}
+<div id="site-name" style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <a href="{% url 'admin:index' %}" style="display: inline-flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-cube" style="color: #818cf8;"></i>
+        <span>{{ site_header|default:_('Django administration') }}</span>
+    </a>
+    
+    <a href="/shop/admin-dashboard/" class="nexus-admin-launch-btn" title="Open Custom Nexus Inventory & Operations UI">
+        <span class="nexus-pulse-dot"></span>
+        <i class="fa-solid fa-gauge-high"></i>
+        <span>Launch Operations & Inventory UI</span>
+        <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.75rem; opacity: 0.8;"></i>
+    </a>
+
+    <a href="/shop/" target="_blank" style="color: #cbd5e1; font-size: 0.82rem; font-weight: 600; text-decoration: none; margin-left: 10px; display: inline-flex; align-items: center; gap: 5px; opacity: 0.85; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.85'">
+        <i class="fa-solid fa-store"></i> View Live Store
+    </a>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

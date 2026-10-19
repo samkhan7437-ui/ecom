@@ -1,0 +1,82 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block nav-breadcrumbs %}{% endblock %}
+
+{% block nav-sidebar %}{% endblock %}
+
+{% block content %}
+<!-- ==========================================================================
+     NEXUS LUXE EXECUTIVE OPERATIONS BANNER
+     ========================================================================== -->
+<div style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%); border: 1px solid rgba(99, 102, 241, 0.35); border-radius: 16px; padding: 24px 28px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); color: #ffffff;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div style="max-width: 600px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 99px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; color: #a5b4fc; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                <span class="nexus-pulse-dot"></span>
+                <span>Active Storefront Engine</span>
+            </div>
+            <h1 style="font-size: 1.7rem; font-weight: 800; margin: 0 0 8px 0; color: #ffffff; letter-spacing: -0.5px;">
+                NEXUS LUXE — Store Operations & Inventory Center
+            </h1>
+            <p style="color: #cbd5e1; font-size: 0.95rem; margin: 0; line-height: 1.5;">
+                Add new products, adjust pricing, manage categories, and control inventory in real time with the modern visual control suite. Any modifications are automatically synchronized with the live customer shop.
+            </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <a href="/shop/admin-dashboard/" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%); color: #ffffff; padding: 13px 26px; border-radius: 12px; font-weight: 700; font-size: 1rem; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 25px rgba(99, 102, 241, 0.45); border: 1px solid rgba(255, 255, 255, 0.25); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Open Inventory & Operations UI</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <div style="display: flex; gap: 10px;">
+                <a href="/shop/admin-dashboard/#addProductSection" style="flex: 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #e2e8f0; padding: 8px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fa-solid fa-plus"></i> Add Product
+                </a>
+                <a href="/shop/" target="_blank" style="flex: 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #e2e8f0; padding: 8px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; text-decoration: none; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Shop
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="content-main">
+  {% include "admin/app_list.html" with app_list=app_list %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% translate 'Recent actions' %}</h2>
+        <h3>{% translate 'My actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+            <p>{% translate 'None available' %}</p>
+            {% else %}
+            <ul class="actionlist">
+            {% for entry in admin_log %}
+            <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                <br>
+                {% if entry.content_type %}
+                    <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+                {% else %}
+                    <span class="mini quiet">{% translate 'Unknown content' %}</span>
+                {% endif %}
+            </li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}

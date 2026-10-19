@@ -1,0 +1,848 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+
+{% block title %}Operations & Inventory Control | NEXUS LUXE{% endblock %}
+{% block nav_admin %}active{% endblock %}
+
+{% block body %}
+<div class="ops-container">
+
+  <!-- ========================================================================
+       HERO & KPI CONTROL CENTER
+       ======================================================================== -->
+  <section class="ops-hero">
+    <div class="ops-header-row">
+      <div class="ops-title-group">
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.35); border-radius: 99px; padding: 4px 14px; font-size: 0.78rem; font-weight: 700; color: #a5b4fc; margin-bottom: 0.8rem; text-transform: uppercase;">
+          <span class="nexus-pulse-dot"></span>
+          <span>Live Store Operations & Stock Management</span>
+        </div>
+        <h1>Inventory Control <span class="gradient-text">Suite</span></h1>
+        <p>
+          Add products, update pricing, classify merchandise, and maintain live stock synchronization. Every update made here is reflected immediately across the storefront.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
+        <a href="#addProductSection" class="btn-nexus-primary" style="padding: 0.75rem 1.4rem;">
+          <i class="fa-solid fa-plus"></i> Add New Product
+        </a>
+        <a href="/shop/" target="_blank" class="btn-nexus-outline" style="padding: 0.75rem 1.4rem;">
+          <i class="fa-solid fa-store"></i> Customer Shop
+        </a>
+        <a href="/admin/" target="_blank" class="btn-nexus-outline" style="padding: 0.75rem 1.2rem; border-color: rgba(255,255,255,0.15);">
+          <i class="fa-solid fa-shield-halved"></i> Django Admin
+        </a>
+      </div>
+    </div>
+
+    <!-- Live Store Stats Grid -->
+    <div class="ops-metrics-grid">
+      <div class="ops-metric-card">
+        <div class="ops-metric-icon icon-purple">
+          <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+        <div class="ops-metric-data">
+          <div class="metric-num" id="statTotalItems">{{ all_products_count }}</div>
+          <div class="metric-lbl">Total Catalog Items</div>
+        </div>
+      </div>
+
+      <div class="ops-metric-card">
+        <div class="ops-metric-icon icon-emerald">
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+        </div>
+        <div class="ops-metric-data">
+          <div class="metric-num" id="statTotalValue">₹{{ total_valuation }}</div>
+          <div class="metric-lbl">Total Inventory Value</div>
+        </div>
+      </div>
+
+      <div class="ops-metric-card">
+        <div class="ops-metric-icon icon-cyan">
+          <i class="fa-solid fa-tags"></i>
+        </div>
+        <div class="ops-metric-data">
+          <div class="metric-num" id="statCategories">{{ categories|length }}</div>
+          <div class="metric-lbl">Active Categories</div>
+        </div>
+      </div>
+
+      <div class="ops-metric-card">
+        <div class="ops-metric-icon icon-amber">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <div class="ops-metric-data">
+          <div class="metric-num" id="statAvgPrice">₹{{ avg_price }}</div>
+          <div class="metric-lbl">Average Item Price</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       LIVE STATUS NOTIFICATION BANNER (IF REDIRECTED FROM ACTION)
+       ======================================================================== -->
+  <div id="opsNotificationBanner" style="display: none; margin-bottom: 2rem; padding: 1rem 1.5rem; border-radius: var(--radius-md); font-weight: 600; align-items: center; justify-content: space-between;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <i id="notifIcon" class="fa-solid fa-circle-check" style="font-size: 1.2rem;"></i>
+      <span id="notifMessage">Operation successful!</span>
+    </div>
+    <button type="button" onclick="document.getElementById('opsNotificationBanner').style.display='none'" style="background: transparent; border: none; color: inherit; cursor: pointer; font-size: 1.1rem;">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <!-- ========================================================================
+       ADD NEW PRODUCT / INVENTORY SECTION
+       ======================================================================== -->
+  <section class="ops-section-card" id="addProductSection">
+    <div class="ops-section-header">
+      <div>
+        <h2>
+          <i class="fa-solid fa-circle-plus" style="color: var(--primary);"></i>
+          <span>Add New Product to Storefront</span>
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; margin-top: 0.2rem;">
+          Published merchandise instantly appears in the home catalogue, search index, and category carousel.
+        </p>
+      </div>
+
+      <button type="button" class="btn-nexus-outline" onclick="resetAddForm()" style="font-size: 0.8rem; padding: 0.4rem 0.9rem;">
+        <i class="fa-solid fa-arrow-rotate-left"></i> Reset Form
+      </button>
+    </div>
+
+    <form action="/shop/admin-dashboard/add/" method="POST" enctype="multipart/form-data" id="addProductForm">
+      {% csrf_token %}
+      
+      <div class="ops-form-grid">
+        
+        <!-- Product Name -->
+        <div class="ops-form-group">
+          <label class="ops-label" for="addProductName">
+            <span>Product Title <span style="color: var(--rose);">*</span></span>
+            <span style="font-weight: 400; color: var(--text-muted); text-transform: none;">Max 50 chars</span>
+          </label>
+          <input type="text" name="product_name" id="addProductName" class="ops-input" placeholder="e.g. Nexus Titanium Chrono X1" required maxlength="50">
+        </div>
+
+        <!-- Price -->
+        <div class="ops-form-group">
+          <label class="ops-label" for="addProductPrice">
+            <span>Price (₹) <span style="color: var(--rose);">*</span></span>
+            <span style="font-weight: 400; color: var(--text-muted); text-transform: none;">Integer amount</span>
+          </label>
+          <div style="position: relative;">
+            <span style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-weight: 700;">₹</span>
+            <input type="number" name="price" id="addProductPrice" class="ops-input" style="padding-left: 2.2rem;" placeholder="1499" min="0" required>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="ops-form-group">
+          <label class="ops-label" for="addProductCategory">
+            <span>Category <span style="color: var(--rose);">*</span></span>
+            <span style="font-weight: 400; color: var(--text-muted); text-transform: none;">Catalog Group</span>
+          </label>
+          <select name="category" id="addProductCategory" class="ops-select" onchange="toggleCustomCategory(this)">
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+            <option value="__NEW__">+ Create New Category...</option>
+          </select>
+          <input type="text" name="custom_category" id="addCustomCategory" class="ops-input" placeholder="Type new category name..." style="display: none; margin-top: 0.5rem;" maxlength="50">
+        </div>
+
+        <!-- Subcategory -->
+        <div class="ops-form-group">
+          <label class="ops-label" for="addProductSubcategory">
+            <span>Subcategory</span>
+            <span style="font-weight: 400; color: var(--text-muted); text-transform: none;">Optional tag</span>
+          </label>
+          <input type="text" name="subcategory" id="addProductSubcategory" class="ops-input" placeholder="e.g. Wireless Audio / Flagship" maxlength="50">
+        </div>
+
+        <!-- Release / Pub Date -->
+        <div class="ops-form-group">
+          <label class="ops-label" for="addProductDate">
+            <span>Release Date</span>
+            <span style="font-weight: 400; color: var(--text-muted); text-transform: none;">Defaults to Today</span>
+          </label>
+          <input type="date" name="pub_date" id="addProductDate" class="ops-input">
+        </div>
+
+        <!-- Image Selector / Upload -->
+        <div class="ops-form-group">
+          <label class="ops-label">
+            <span>Product Image</span>
+            <span style="font-weight: 400; color: var(--text-muted); text-transform: none;">Upload file or pick sample</span>
+          </label>
+          
+          <input type="file" name="image" id="addProductImageFile" class="ops-input" accept="image/*" style="padding: 0.5rem;" onchange="handleAddImagePreview(event)">
+          <input type="hidden" name="preset_image" id="addPresetImageVal" value="">
+
+          <div style="margin-top: 0.5rem;">
+            <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.3rem;">Or choose from curated store presets:</div>
+            <div class="ops-preset-chips" id="presetChipsContainer">
+              {% for preset in preset_images %}
+              <div class="ops-preset-chip" data-path="{{ preset.path }}" onclick="selectPresetImage(this, 'addPresetImageVal', 'addImagePreviewImg')">
+                <i class="fa-solid fa-image"></i>
+                <span>{{ preset.name }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Description (Full Width) -->
+        <div class="ops-form-group full-width">
+          <label class="ops-label" for="addProductDesc">
+            <span>Product Description <span style="color: var(--rose);">*</span></span>
+            <span style="font-weight: 400; color: var(--text-muted); text-transform: none;">Max 300 characters</span>
+          </label>
+          <textarea name="desc" id="addProductDesc" rows="3" class="ops-textarea" placeholder="Describe craftsmanship, titanium grade, acoustic details, battery longevity, or key features..." maxlength="300" required></textarea>
+        </div>
+
+        <!-- Image Live Preview Box -->
+        <div class="ops-form-group full-width" id="addImagePreviewBox" style="display: none;">
+          <div style="display: flex; align-items: center; gap: 1.5rem; background: rgba(0, 0, 0, 0.35); padding: 1rem; border-radius: var(--radius-md); border: 1px dashed var(--border-glass);">
+            <img src="" id="addImagePreviewImg" alt="Image Preview" style="width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <div>
+              <div style="font-size: 0.85rem; font-weight: 700; color: #ffffff;">Selected Product Artwork</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary);" id="addImagePreviewName">Ready for upload</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+        <button type="submit" class="btn-nexus-primary" style="padding: 0.85rem 2rem; font-size: 1rem;">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Save & Publish to Store</span>
+        </button>
+      </div>
+
+    </form>
+  </section>
+
+  <!-- ========================================================================
+       MANAGE INVENTORY & LIVE OPERATIONS TABLE
+       ======================================================================== -->
+  <section class="ops-section-card">
+    <div class="ops-section-header">
+      <div>
+        <h2>
+          <i class="fa-solid fa-list-check" style="color: #38bdf8;"></i>
+          <span>Current Store Inventory</span>
+          <span class="badge-nexus badge-purple" style="font-size: 0.75rem; margin-left: 0.5rem;" id="tableCountBadge">{{ products|length }} Products</span>
+        </h2>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; margin-top: 0.2rem;">
+          Real-time catalog synchronized with live customer views. Edit pricing or details on the fly.
+        </p>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="button" class="btn-ops-action" onclick="toggleViewMode('table')" id="btnViewTable" title="Table View" style="background: rgba(99, 102, 241, 0.25); color: #ffffff;">
+          <i class="fa-solid fa-table-cells"></i>
+        </button>
+        <button type="button" class="btn-ops-action" onclick="toggleViewMode('grid')" id="btnViewGrid" title="Card Grid View">
+          <i class="fa-solid fa-grip"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="ops-actions-bar">
+      <!-- Live Search Box -->
+      <div class="ops-search-box">
+        <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 0.85rem;"></i>
+        <input type="text" id="inventorySearchInput" placeholder="Filter by name, category, or spec..." onkeyup="filterInventoryTable()">
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="categoryFilterPills">
+        <button type="button" class="filter-pill-btn active" data-cat="all" onclick="filterByCategory('all', this)" style="padding: 0.4rem 0.9rem; font-size: 0.78rem;">
+          All ({{ all_products_count }})
+        </button>
+        {% for cat in category_counts %}
+        <button type="button" class="filter-pill-btn" data-cat="{{ cat.name|lower }}" onclick="filterByCategory('{{ cat.name|lower }}', this)" style="padding: 0.4rem 0.9rem; font-size: 0.78rem;">
+          {{ cat.name }} ({{ cat.count }})
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Inventory Table View -->
+    <div class="ops-table-responsive" id="inventoryTableView">
+      <table class="ops-table">
+        <thead>
+          <tr>
+            <th style="width: 70px;">ID</th>
+            <th>Product & Artwork</th>
+            <th>Category</th>
+            <th>Subcategory</th>
+            <th>Price</th>
+            <th>Release Date</th>
+            <th style="text-align: right; padding-right: 1.5rem;">Operations</th>
+          </tr>
+        </thead>
+        <tbody id="inventoryTableBody">
+          {% for item in products %}
+          <tr class="inventory-row" data-name="{{ item.product_name|lower }}" data-cat="{{ item.category|lower }}" data-desc="{{ item.desc|lower }}" data-id="{{ item.id }}">
+            
+            <!-- ID -->
+            <td style="color: var(--text-muted); font-weight: 700;">#{{ item.id }}</td>
+            
+            <!-- Product Info & Image -->
+            <td>
+              <div class="product-info-cell">
+                <img src="/media/{{ item.image }}" alt="{{ item.product_name }}" class="product-row-thumb" onerror="this.src='{% static 'shop/hero_showcase.jpg' %}';">
+                <div>
+                  <a href="/shop/products/{{ item.id }}/" target="_blank" class="product-name-txt" title="View product page on storefront">
+                    {{ item.product_name }}
+                    <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem; opacity: 0.6; margin-left: 4px;"></i>
+                  </a>
+                  <div style="color: var(--text-muted); font-size: 0.78rem; max-width: 320px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    {{ item.desc }}
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Category -->
+            <td>
+              <span class="badge-nexus badge-purple">{{ item.category }}</span>
+            </td>
+
+            <!-- Subcategory -->
+            <td>
+              <span style="color: #cbd5e1; font-size: 0.85rem;">{{ item.subcategory|default:"Standard" }}</span>
+            </td>
+
+            <!-- Price & Quick Price Adjust -->
+            <td>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-weight: 700; color: #34d399; font-size: 1.05rem;">₹{{ item.price }}</span>
+                <button type="button" class="btn-ops-action" style="width: 24px; height: 24px; font-size: 0.7rem;" title="Quick price adjust" onclick="quickEditPrice('{{ item.id }}', '{{ item.price }}')">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+              </div>
+            </td>
+
+            <!-- Date -->
+            <td style="color: var(--text-secondary); font-size: 0.85rem;">
+              {{ item.pub_date }}
+            </td>
+
+            <!-- Actions -->
+            <td style="text-align: right; padding-right: 1.5rem;">
+              <div class="ops-actions-cell" style="justify-content: flex-end;">
+                <!-- View on Shop -->
+                <a href="/shop/products/{{ item.id }}/" target="_blank" class="btn-ops-action" title="View in live store">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+
+                <!-- Edit Modal Trigger -->
+                <button type="button" class="btn-ops-action" title="Edit Product Details" onclick="openEditModal('{{ item.id }}', '{{ item.product_name|escapejs }}', '{{ item.category|escapejs }}', '{{ item.subcategory|escapejs }}', '{{ item.price }}', '{{ item.desc|escapejs }}', '{{ item.pub_date }}', '/media/{{ item.image }}')">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+
+                <!-- Duplicate SKU -->
+                <button type="button" class="btn-ops-action" title="Duplicate SKU" onclick="duplicateProduct('{{ item.id }}')">
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+
+                <!-- Delete Product -->
+                <button type="button" class="btn-ops-action danger" title="Delete Product" onclick="openDeleteModal('{{ item.id }}', '{{ item.product_name|escapejs }}')">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 3rem 1rem; color: var(--text-secondary);">
+              <i class="fa-solid fa-box-open" style="font-size: 2.5rem; margin-bottom: 0.8rem; display: block; opacity: 0.4;"></i>
+              No products found in this category. Add a new product above!
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Inventory Grid View (Hidden by default) -->
+    <div id="inventoryGridView" style="display: none; margin-top: 1.5rem;">
+      <div class="products-grid" id="gridCardsContainer">
+        {% for item in products %}
+        <article class="product-card inventory-card" data-name="{{ item.product_name|lower }}" data-cat="{{ item.category|lower }}" data-id="{{ item.id }}">
+          <div class="product-card-image-wrapper">
+            <span class="badge-nexus badge-purple product-card-category-tag">{{ item.category }}</span>
+            <img src="/media/{{ item.image }}" alt="{{ item.product_name }}" class="product-card-image" onerror="this.src='{% static 'shop/hero_showcase.jpg' %}';">
+          </div>
+          <div class="product-card-content">
+            <h3 class="product-card-title">
+              <a href="/shop/products/{{ item.id }}/" target="_blank">{{ item.product_name }}</a>
+            </h3>
+            <p class="product-card-desc">{{ item.desc }}</p>
+            <div class="product-card-footer">
+              <div class="product-card-price-box">
+                <span class="price-label">Price</span>
+                <span class="price-value">₹{{ item.price }}</span>
+              </div>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn-ops-action" onclick="openEditModal('{{ item.id }}', '{{ item.product_name|escapejs }}', '{{ item.category|escapejs }}', '{{ item.subcategory|escapejs }}', '{{ item.price }}', '{{ item.desc|escapejs }}', '{{ item.pub_date }}', '/media/{{ item.image }}')">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button type="button" class="btn-ops-action danger" onclick="openDeleteModal('{{ item.id }}', '{{ item.product_name|escapejs }}')">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<!-- ========================================================================
+     EDIT PRODUCT MODAL
+     ======================================================================== -->
+<div class="ops-modal-overlay" id="editProductModal">
+  <div class="ops-modal-card">
+    <div class="ops-modal-header">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fa-solid fa-pen-to-square" style="color: var(--primary); font-size: 1.2rem;"></i>
+        <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff;">Edit Product Details</h3>
+      </div>
+      <button type="button" class="btn-close-modal" onclick="closeEditModal()" style="position: static; border-radius: var(--radius-sm); width: 32px; height: 32px;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <form id="editProductForm" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="ops-modal-body">
+        
+        <div class="ops-form-grid">
+          
+          <!-- Product Name -->
+          <div class="ops-form-group full-width">
+            <label class="ops-label" for="editProductName">Product Title</label>
+            <input type="text" name="product_name" id="editProductName" class="ops-input" required maxlength="50">
+          </div>
+
+          <!-- Price -->
+          <div class="ops-form-group">
+            <label class="ops-label" for="editProductPrice">Price (₹)</label>
+            <input type="number" name="price" id="editProductPrice" class="ops-input" min="0" required>
+          </div>
+
+          <!-- Category -->
+          <div class="ops-form-group">
+            <label class="ops-label" for="editProductCategory">Category</label>
+            <select name="category" id="editProductCategory" class="ops-select" onchange="toggleCustomCategory(this, 'editCustomCategory')">
+              {% for cat in categories %}
+              <option value="{{ cat }}">{{ cat }}</option>
+              {% endfor %}
+              <option value="__NEW__">+ Create New Category...</option>
+            </select>
+            <input type="text" name="custom_category" id="editCustomCategory" class="ops-input" placeholder="New category name..." style="display: none; margin-top: 0.5rem;" maxlength="50">
+          </div>
+
+          <!-- Subcategory -->
+          <div class="ops-form-group">
+            <label class="ops-label" for="editProductSubcategory">Subcategory</label>
+            <input type="text" name="subcategory" id="editProductSubcategory" class="ops-input" maxlength="50">
+          </div>
+
+          <!-- Release Date -->
+          <div class="ops-form-group">
+            <label class="ops-label" for="editProductDate">Release Date</label>
+            <input type="date" name="pub_date" id="editProductDate" class="ops-input">
+          </div>
+
+          <!-- Description -->
+          <div class="ops-form-group full-width">
+            <label class="ops-label" for="editProductDesc">Description</label>
+            <textarea name="desc" id="editProductDesc" rows="3" class="ops-textarea" maxlength="300" required></textarea>
+          </div>
+
+          <!-- Change Artwork File -->
+          <div class="ops-form-group full-width">
+            <label class="ops-label">Update Artwork (Optional)</label>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+              <img src="" id="editModalCurrentThumb" alt="Current Artwork" style="width: 50px; height: 50px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <input type="file" name="image" id="editProductImageFile" class="ops-input" accept="image/*" style="flex: 1;">
+            </div>
+            
+            <div style="font-size: 0.76rem; color: var(--text-muted); margin-bottom: 0.3rem;">Or switch to preset artwork:</div>
+            <input type="hidden" name="preset_image" id="editPresetImageVal" value="">
+            <div class="ops-preset-chips">
+              {% for preset in preset_images %}
+              <div class="ops-preset-chip" data-path="{{ preset.path }}" onclick="selectPresetImage(this, 'editPresetImageVal', 'editModalCurrentThumb')">
+                <i class="fa-solid fa-image"></i>
+                <span>{{ preset.name }}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div style="padding: 1.25rem 2rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: flex-end; gap: 1rem; background: rgba(0,0,0,0.2);">
+        <button type="button" class="btn-nexus-outline" onclick="closeEditModal()">Cancel</button>
+        <button type="submit" class="btn-nexus-primary">
+          <i class="fa-solid fa-floppy-disk"></i> Save Modifications
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ========================================================================
+     DELETE CONFIRMATION MODAL
+     ======================================================================== -->
+<div class="ops-modal-overlay" id="deleteProductModal">
+  <div class="ops-modal-card" style="max-width: 480px; text-align: center;">
+    <div class="ops-modal-body" style="padding: 2.5rem 2rem 1.5rem;">
+      <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h3 style="font-size: 1.3rem; font-weight: 700; color: #ffffff; margin-bottom: 0.5rem;">Remove from Storefront?</h3>
+      <p style="color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 1rem;">
+        Are you sure you want to delete <strong id="deleteProductNameText" style="color: #ffffff;"></strong>? This action will remove it permanently from the catalogue and live storefront.
+      </p>
+
+      <form id="deleteProductForm" method="POST">
+        {% csrf_token %}
+        <div style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 1.75rem;">
+          <button type="button" class="btn-nexus-outline" onclick="closeDeleteModal()" style="flex: 1;">Cancel</button>
+          <button type="submit" class="btn-nexus-primary" style="background: linear-gradient(135deg, #ef4444, #dc2626); border-color: #ef4444; flex: 1;">
+            <i class="fa-solid fa-trash"></i> Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+  // ==========================================================================
+  // OPERATIONS DASHBOARD REACTIVE SCRIPT
+  // ==========================================================================
+
+  // Check URL query params for status toasts
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const status = params.get('status');
+    const banner = document.getElementById('opsNotificationBanner');
+    const icon = document.getElementById('notifIcon');
+    const msg = document.getElementById('notifMessage');
+
+    if (status) {
+      banner.style.display = 'flex';
+      if (status === 'added') {
+        banner.style.background = 'rgba(16, 185, 129, 0.15)';
+        banner.style.border = '1px solid rgba(16, 185, 129, 0.4)';
+        banner.style.color = '#34d399';
+        icon.className = 'fa-solid fa-circle-check';
+        msg.textContent = '✨ New inventory item successfully published and live on storefront!';
+      } else if (status === 'updated') {
+        banner.style.background = 'rgba(99, 102, 241, 0.15)';
+        banner.style.border = '1px solid rgba(99, 102, 241, 0.4)';
+        banner.style.color = '#a5b4fc';
+        icon.className = 'fa-solid fa-pen-to-square';
+        msg.textContent = '✅ Product inventory and pricing updated successfully!';
+      } else if (status === 'deleted') {
+        banner.style.background = 'rgba(239, 68, 68, 0.15)';
+        banner.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+        banner.style.color = '#f87171';
+        icon.className = 'fa-solid fa-trash-can';
+        msg.textContent = '🗑️ Product removed from inventory and storefront.';
+      }
+    }
+
+    // Set today's date in add form release date input
+    const dateInput = document.getElementById('addProductDate');
+    if (dateInput && !dateInput.value) {
+      dateInput.value = new Date().toISOString().split('T')[0];
+    }
+  });
+
+  // Toggle Custom Category text input
+  function toggleCustomCategory(selectElement, targetInputId = 'addCustomCategory') {
+    const input = document.getElementById(targetInputId);
+    if (selectElement.value === '__NEW__') {
+      input.style.display = 'block';
+      input.required = true;
+      input.focus();
+    } else {
+      input.style.display = 'none';
+      input.required = false;
+    }
+  }
+
+  // Handle Preset Image Selection
+  function selectPresetImage(chipElement, hiddenInputId, previewImgId) {
+    const path = chipElement.getAttribute('data-path');
+    const hiddenInput = document.getElementById(hiddenInputId);
+    hiddenInput.value = path;
+
+    // Update active state on chips
+    const parent = chipElement.parentElement;
+    parent.querySelectorAll('.ops-preset-chip').forEach(c => c.classList.remove('active'));
+    chipElement.classList.add('active');
+
+    // Update preview
+    const previewImg = document.getElementById(previewImgId);
+    if (previewImg) {
+      previewImg.src = '/media/' + path;
+      const previewBox = document.getElementById('addImagePreviewBox');
+      if (previewBox) previewBox.style.display = 'block';
+      const nameTxt = document.getElementById('addImagePreviewName');
+      if (nameTxt) nameTxt.textContent = 'Preset: ' + chipElement.innerText.trim();
+    }
+  }
+
+  // Handle File Input Preview
+  function handleAddImagePreview(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const previewImg = document.getElementById('addImagePreviewImg');
+        previewImg.src = evt.target.result;
+        document.getElementById('addImagePreviewBox').style.display = 'block';
+        document.getElementById('addImagePreviewName').textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+        // Clear preset chips
+        document.getElementById('addPresetImageVal').value = '';
+        document.querySelectorAll('#presetChipsContainer .ops-preset-chip').forEach(c => c.classList.remove('active'));
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Reset Add Form
+  function resetAddForm() {
+    document.getElementById('addProductForm').reset();
+    document.getElementById('addCustomCategory').style.display = 'none';
+    document.getElementById('addImagePreviewBox').style.display = 'none';
+    document.getElementById('addPresetImageVal').value = '';
+    document.querySelectorAll('#presetChipsContainer .ops-preset-chip').forEach(c => c.classList.remove('active'));
+    document.getElementById('addProductDate').value = new Date().toISOString().split('T')[0];
+  }
+
+  // ==========================================================================
+  // INVENTORY FILTERING & SEARCH
+  // ==========================================================================
+
+  let currentCategoryFilter = 'all';
+
+  function filterInventoryTable() {
+    const query = document.getElementById('inventorySearchInput').value.toLowerCase().trim();
+    const rows = document.querySelectorAll('#inventoryTableBody .inventory-row');
+    const cards = document.querySelectorAll('#gridCardsContainer .inventory-card');
+
+    let visibleCount = 0;
+
+    // Filter table rows
+    rows.forEach(row => {
+      const name = row.getAttribute('data-name');
+      const cat = row.getAttribute('data-cat');
+      const desc = row.getAttribute('data-desc');
+
+      const matchCat = (currentCategoryFilter === 'all' || cat === currentCategoryFilter);
+      const matchQuery = (!query || name.includes(query) || cat.includes(query) || desc.includes(query));
+
+      if (matchCat && matchQuery) {
+        row.style.display = '';
+        visibleCount++;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    // Filter grid cards
+    cards.forEach(card => {
+      const name = card.getAttribute('data-name');
+      const cat = card.getAttribute('data-cat');
+
+      const matchCat = (currentCategoryFilter === 'all' || cat === currentCategoryFilter);
+      const matchQuery = (!query || name.includes(query) || cat.includes(query));
+
+      if (matchCat && matchQuery) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    document.getElementById('tableCountBadge').textContent = visibleCount + ' Products';
+  }
+
+  function filterByCategory(cat, btn) {
+    currentCategoryFilter = cat;
+    document.querySelectorAll('#categoryFilterPills .filter-pill-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterInventoryTable();
+  }
+
+  // Toggle View Mode (Table vs Cards)
+  function toggleViewMode(mode) {
+    const tableView = document.getElementById('inventoryTableView');
+    const gridView = document.getElementById('inventoryGridView');
+    const btnTable = document.getElementById('btnViewTable');
+    const btnGrid = document.getElementById('btnViewGrid');
+
+    if (mode === 'grid') {
+      tableView.style.display = 'none';
+      gridView.style.display = 'block';
+      btnGrid.style.background = 'rgba(99, 102, 241, 0.25)';
+      btnGrid.style.color = '#ffffff';
+      btnTable.style.background = 'rgba(255, 255, 255, 0.05)';
+      btnTable.style.color = 'var(--text-secondary)';
+    } else {
+      tableView.style.display = 'block';
+      gridView.style.display = 'none';
+      btnTable.style.background = 'rgba(99, 102, 241, 0.25)';
+      btnTable.style.color = '#ffffff';
+      btnGrid.style.background = 'rgba(255, 255, 255, 0.05)';
+      btnGrid.style.color = 'var(--text-secondary)';
+    }
+  }
+
+  // ==========================================================================
+  // EDIT PRODUCT MODAL LOGIC
+  // ==========================================================================
+
+  function openEditModal(id, name, category, subcategory, price, desc, pubDate, image) {
+    const modal = document.getElementById('editProductModal');
+    const form = document.getElementById('editProductForm');
+
+    form.action = `/shop/admin-dashboard/edit/${id}/`;
+    document.getElementById('editProductName').value = name;
+    document.getElementById('editProductPrice').value = price;
+    document.getElementById('editProductSubcategory').value = subcategory || '';
+    document.getElementById('editProductDesc').value = desc;
+    document.getElementById('editProductDate').value = pubDate;
+    document.getElementById('editModalCurrentThumb').src = image;
+
+    // Set category select
+    const catSelect = document.getElementById('editProductCategory');
+    let found = false;
+    for (let opt of catSelect.options) {
+      if (opt.value === category) {
+        catSelect.value = category;
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      catSelect.value = '__NEW__';
+      const customInput = document.getElementById('editCustomCategory');
+      customInput.style.display = 'block';
+      customInput.value = category;
+    } else {
+      document.getElementById('editCustomCategory').style.display = 'none';
+    }
+
+    modal.style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editProductModal').style.display = 'none';
+  }
+
+  // ==========================================================================
+  // DELETE PRODUCT MODAL LOGIC
+  // ==========================================================================
+
+  function openDeleteModal(id, name) {
+    const modal = document.getElementById('deleteProductModal');
+    document.getElementById('deleteProductNameText').textContent = `"${name}"`;
+    document.getElementById('deleteProductForm').action = `/shop/admin-dashboard/delete/${id}/`;
+    modal.style.display = 'flex';
+  }
+
+  function closeDeleteModal() {
+    document.getElementById('deleteProductModal').style.display = 'none';
+  }
+
+  // ==========================================================================
+  // QUICK ACTIONS (AJAX)
+  // ==========================================================================
+
+  function quickEditPrice(id, currentPrice) {
+    const newPrice = prompt(`Update price for product #${id}:`, currentPrice);
+    if (newPrice !== null && newPrice.trim() !== '' && !isNaN(newPrice)) {
+      const formData = new FormData();
+      formData.append('product_id', id);
+      formData.append('action', 'price');
+      formData.append('value', newPrice.trim());
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+      fetch('/shop/admin-dashboard/quick-update/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          window.location.href = '/shop/admin-dashboard/?status=updated';
+        } else {
+          alert(data.error || 'Could not update price');
+        }
+      })
+      .catch(err => {
+        alert('Network error while updating price.');
+      });
+    }
+  }
+
+  function duplicateProduct(id) {
+    if (confirm('Create a duplicate of this SKU in your inventory?')) {
+      const formData = new FormData();
+      formData.append('product_id', id);
+      formData.append('action', 'duplicate');
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+      fetch('/shop/admin-dashboard/quick-update/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          window.location.href = '/shop/admin-dashboard/?status=added';
+        }
+      })
+      .catch(err => {
+        alert('Error duplicating product.');
+      });
+    }
+  }
+
+  // Close modals on clicking backdrop
+  window.addEventListener('click', (e) => {
+    const editModal = document.getElementById('editProductModal');
+    const deleteModal = document.getElementById('deleteProductModal');
+    if (e.target === editModal) closeEditModal();
+    if (e.target === deleteModal) closeDeleteModal();
+  });
+</script>
+{% endblock %}

@@ -1,2 +1,116 @@
 {% extends 'shop/basic.html' %}
-{% block title %} Tack Your Order {% endblock %}
+{% load static %}
+
+{% block title %}Order Tracker | NEXUS LUXE Logistics{% endblock %}
+{% block nav_tracker %}active{% endblock %}
+
+{% block body %}
+<div class="page-wrapper tracker-wrapper">
+  
+  <div class="page-header">
+    <span class="badge-nexus badge-cyan" style="margin-bottom: 0.8rem;">TELEMETRY LOGISTICS</span>
+    <h1>Live Order <span class="gradient-text">Telemetry Tracker</span></h1>
+    <p>Monitor your consignment journey in real-time from our secure facility to your doorstep.</p>
+  </div>
+
+  <!-- Tracker Lookup Form Card -->
+  <div class="form-glass-card" style="margin-bottom: 3rem;">
+    <form action="/shop/tracker/" method="get" id="trackerForm">
+      <div class="form-group-row">
+        <div class="form-group">
+          <label for="orderId">Consignment / Order ID *</label>
+          <input type="text" name="orderId" id="orderId" class="form-control-nexus" value="{{ order_id|default:'NEXUS-884920' }}" placeholder="e.g. NEXUS-884920" required>
+        </div>
+        <div class="form-group">
+          <label for="trackerEmail">Billing Email Address *</label>
+          <input type="email" name="email" id="trackerEmail" class="form-control-nexus" value="{{ email|default:'patron@nexusluxe.io' }}" placeholder="patron@nexusluxe.io" required>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem; flex-wrap: wrap;">
+        <button type="submit" class="btn-nexus-primary" style="padding: 0.8rem 2rem;">
+          <i class="fa-solid fa-radar"></i> Track Consignment
+        </button>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">
+          *Need help finding your ID? Check your order confirmation dispatch email.
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <!-- Live Telemetry Status Display -->
+  <div class="form-glass-card" id="trackerResults">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+      <div>
+        <span class="badge-nexus badge-emerald" style="margin-bottom: 0.4rem;">
+          <i class="fa-solid fa-circle" style="font-size: 0.5rem; margin-right: 4px;"></i> IN TRANSIT
+        </span>
+        <h3 style="font-size: 1.6rem; margin: 0;">Order <span class="gradient-cyan-text">{{ order_id|default:"NEXUS-884920" }}</span></h3>
+      </div>
+      <div style="text-align: right;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Estimated Arrival</span>
+        <div style="font-size: 1.25rem; font-weight: 800; color: #fff;">Tomorrow, by 1:00 PM EST</div>
+      </div>
+    </div>
+
+    <!-- Timeline Stepper -->
+    <div class="timeline-stepper">
+      <div class="timeline-progress-fill" style="width: 70%;"></div>
+
+      <div class="step-node completed">
+        <div class="step-circle"><i class="fa-solid fa-receipt"></i></div>
+        <span class="step-label">Order Placed</span>
+        <span style="font-size: 0.72rem; color: var(--text-muted);">Oct 18, 09:12 AM</span>
+      </div>
+
+      <div class="step-node completed">
+        <div class="step-circle"><i class="fa-solid fa-box-check"></i></div>
+        <span class="step-label">Inspected & Sealed</span>
+        <span style="font-size: 0.72rem; color: var(--text-muted);">Oct 18, 03:45 PM</span>
+      </div>
+
+      <div class="step-node active">
+        <div class="step-circle"><i class="fa-solid fa-plane-departure"></i></div>
+        <span class="step-label">Priority Air Transit</span>
+        <span style="font-size: 0.72rem; color: var(--cyan);">In Flight (JFK &rarr; ORD)</span>
+      </div>
+
+      <div class="step-node">
+        <div class="step-circle"><i class="fa-solid fa-truck"></i></div>
+        <span class="step-label">Out For Delivery</span>
+        <span style="font-size: 0.72rem; color: var(--text-muted);">Scheduled</span>
+      </div>
+
+      <div class="step-node">
+        <div class="step-circle"><i class="fa-solid fa-house-chimney"></i></div>
+        <span class="step-label">Delivered</span>
+        <span style="font-size: 0.72rem; color: var(--text-muted);">Pending</span>
+      </div>
+    </div>
+
+    <!-- Logistics Details Grid -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle);">
+      <div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Courier Service</span>
+        <h5 style="margin-top: 0.2rem; color: #fff; font-size: 1rem;">DHL Express Worldwide</h5>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">Tracking: 9948-2831-002</p>
+      </div>
+
+      <div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Destination</span>
+        <h5 style="margin-top: 0.2rem; color: #fff; font-size: 1rem;">Chicago, Illinois, US</h5>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">Direct Secure Handoff</p>
+      </div>
+
+      <div>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">Insurance Protocol</span>
+        <h5 style="margin-top: 0.2rem; color: var(--emerald); font-size: 1rem;">Full Transit Coverage</h5>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">100% Guaranteed Delivery</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

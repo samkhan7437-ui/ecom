@@ -1,5 +1,321 @@
 {% extends 'shop/basic.html' %}
+{% load static %}
 
-{% block title %} CheckOut {% endblock %}
-{% block body %}  
+{% block title %}Checkout | NEXUS LUXE Secure Protocol{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <span class="badge-nexus badge-purple" style="margin-bottom: 0.8rem;">SECURE TRANSACTION</span>
+    <h1>Express <span class="gradient-text">Encrypted Checkout</span></h1>
+    <p>Review your items and complete your order with bank-grade 256-bit encryption.</p>
+  </div>
+
+  {% if thank %}
+  <!-- Order Confirmed State -->
+  <div class="form-glass-card" style="max-width: 650px; margin: 0 auto; text-align: center; padding: 3.5rem 2rem;">
+    <div style="width: 75px; height: 75px; border-radius: 50%; background: var(--emerald); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 1.5rem; box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    
+    <span class="badge-nexus badge-emerald" style="margin-bottom: 0.8rem;">ORDER CONFIRMED</span>
+    <h2 style="font-size: 2.2rem; margin-bottom: 0.6rem;">Thank You For Your Patronage</h2>
+    <p style="color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 1.5rem;">
+      Your order reference is <strong style="color: #fff; font-family: var(--font-display);">{{ order_id }}</strong>. A confirmation email with telemetry tracking coordinates has been dispatched.
+    </p>
+
+    <div style="background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1.2rem; margin-bottom: 2rem; display: flex; justify-content: space-around; text-align: center;">
+      <div>
+        <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Estimated Dispatch</span>
+        <div style="font-weight: 700; color: #fff; margin-top: 0.2rem;">Within 24 Hours</div>
+      </div>
+      <div>
+        <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Courier</span>
+        <div style="font-weight: 700; color: var(--cyan); margin-top: 0.2rem;">DHL Priority Express</div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="/shop/tracker/?orderId={{ order_id }}" class="btn-nexus-primary">
+        <i class="fa-solid fa-radar"></i> Track Shipment
+      </a>
+      <a href="/shop/" class="btn-nexus-outline">
+        Continue Shopping
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Clear cart upon successful order placement
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.NexusStore) {
+        window.NexusStore.clearCart();
+      }
+    });
+  </script>
+
+  {% else %}
+
+  <!-- Checkout Grid Form -->
+  <div class="checkout-grid">
+    
+    <!-- Left Column: Shipping & Payment -->
+    <div class="form-glass-card">
+      <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem;">
+        <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
+        <span>1. Consignment Address</span>
+      </h3>
+
+      <form action="/shop/checkout/" method="post" id="checkoutForm">
+        {% csrf_token %}
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="checkoutName">Recipient Name *</label>
+            <input type="text" name="name" id="checkoutName" class="form-control-nexus" placeholder="Alex Vance" required>
+          </div>
+          <div class="form-group">
+            <label for="checkoutEmail">Email Address *</label>
+            <input type="email" name="email" id="checkoutEmail" class="form-control-nexus" placeholder="alex@nexusluxe.io" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="checkoutAddress">Street Address *</label>
+          <input type="text" name="address1" id="checkoutAddress" class="form-control-nexus" placeholder="100 Silicon Blvd, Suite 400" required>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="checkoutCity">City *</label>
+            <input type="text" name="city" id="checkoutCity" class="form-control-nexus" placeholder="San Francisco" required>
+          </div>
+          <div class="form-group">
+            <label for="checkoutState">State / Region *</label>
+            <input type="text" name="state" id="checkoutState" class="form-control-nexus" placeholder="California" required>
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="checkoutZip">Postal / ZIP Code *</label>
+            <input type="text" name="zip_code" id="checkoutZip" class="form-control-nexus" placeholder="94107" required>
+          </div>
+          <div class="form-group">
+            <label for="checkoutPhone">Phone *</label>
+            <input type="tel" name="phone" id="checkoutPhone" class="form-control-nexus" placeholder="+1 (555) 019-2834" required>
+          </div>
+        </div>
+
+        <!-- Payment Method Selection -->
+        <h3 style="font-size: 1.4rem; margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-credit-card" style="color: var(--cyan);"></i>
+          <span>2. Payment Protocol</span>
+        </h3>
+
+        <div class="payment-method-options">
+          <div class="payment-method-box selected" onclick="selectPayment(this)">
+            <i class="fa-solid fa-credit-card" style="font-size: 1.4rem; color: var(--primary);"></i>
+            <div style="font-weight: 700; font-size: 0.85rem; margin-top: 0.4rem; color: #fff;">Credit Card</div>
+          </div>
+          <div class="payment-method-box" onclick="selectPayment(this)">
+            <i class="fa-brands fa-apple" style="font-size: 1.4rem; color: #fff;"></i>
+            <div style="font-weight: 700; font-size: 0.85rem; margin-top: 0.4rem; color: #fff;">Apple Pay</div>
+          </div>
+          <div class="payment-method-box" onclick="selectPayment(this)">
+            <i class="fa-brands fa-bitcoin" style="font-size: 1.4rem; color: var(--amber);"></i>
+            <div style="font-weight: 700; font-size: 0.85rem; margin-top: 0.4rem; color: #fff;">Crypto / Web3</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem;" id="cardFieldsContainer">
+          <div class="form-group">
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" class="form-control-nexus" placeholder="4242 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4242" value="4242 •••• •••• 4242">
+          </div>
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="cardExpiry">Expiration Date</label>
+              <input type="text" id="cardExpiry" class="form-control-nexus" placeholder="MM/YY" value="12/28">
+            </div>
+            <div class="form-group">
+              <label for="cardCvc">Security CVC</label>
+              <input type="text" id="cardCvc" class="form-control-nexus" placeholder="CVC" value="888">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-checkout-drawer" style="margin-top: 1.5rem; font-size: 1.05rem;">
+          <i class="fa-solid fa-lock"></i> Authorize & Place Order
+        </button>
+      </form>
+    </div>
+
+    <!-- Right Column: Order Summary -->
+    <div class="form-glass-card">
+      <h3 style="font-size: 1.4rem; margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: space-between;">
+        <span>Order Summary</span>
+        <span class="badge-nexus badge-purple" id="checkoutItemCountBadge">0 items</span>
+      </h3>
+
+      <!-- Items List -->
+      <div id="checkoutItemsList" style="display: flex; flex-direction: column; gap: 0.9rem; max-height: 320px; overflow-y: auto; margin-bottom: 1.5rem;">
+        <!-- Populated via JS -->
+      </div>
+
+      <!-- Promo Code Input -->
+      <div style="margin-bottom: 1.5rem;">
+        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.4rem; display: block;">Promotional Voucher</label>
+        <div style="display: flex; gap: 0.5rem;">
+          <input type="text" id="promoInput" class="form-control-nexus" placeholder="Enter coupon (e.g. NEXUS20)" style="text-transform: uppercase;">
+          <button type="button" class="btn-nexus-outline" onclick="applyPromoCode()" style="white-space: nowrap; padding: 0.6rem 1.2rem;">
+            Apply
+          </button>
+        </div>
+        <div id="promoNotice" style="font-size: 0.8rem; margin-top: 0.4rem; font-weight: 600;"></div>
+      </div>
+
+      <!-- Financial Calculation -->
+      <div style="display: flex; flex-direction: column; gap: 0.8rem; border-top: 1px solid var(--border-subtle); padding-top: 1.2rem;">
+        <div class="cart-summary-line">
+          <span>Subtotal</span>
+          <span id="checkoutSubtotal" style="color: #fff; font-weight: 700;">$0.00</span>
+        </div>
+        <div class="cart-summary-line">
+          <span>Shipping & Handling</span>
+          <span style="color: var(--emerald); font-weight: 700;">FREE</span>
+        </div>
+        <div class="cart-summary-line" id="discountRow" style="display: none;">
+          <span style="color: var(--fuchsia);">VIP Discount (20%)</span>
+          <span id="checkoutDiscount" style="color: var(--fuchsia); font-weight: 700;">-$0.00</span>
+        </div>
+        <div class="cart-total-line">
+          <span>Grand Total</span>
+          <span id="checkoutGrandTotal" class="gradient-text">$0.00</span>
+        </div>
+      </div>
+
+      <!-- Security Guarantee Badges -->
+      <div style="margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px dashed var(--border-glass); display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.82rem; color: var(--text-secondary);">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-lock" style="color: var(--emerald);"></i>
+          <span>PCI-DSS Level 1 Certified Secure Payment Gateway</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <i class="fa-solid fa-rotate-left" style="color: var(--cyan);"></i>
+          <span>Complimentary 30-Day Obsidian Return Policy</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  let appliedDiscountRate = 0;
+
+  function selectPayment(el) {
+    document.querySelectorAll('.payment-method-box').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function applyPromoCode() {
+    const input = document.getElementById('promoInput');
+    const notice = document.getElementById('promoNotice');
+    if (!input || !notice) return;
+
+    const val = input.value.trim().toUpperCase();
+    if (val === 'NEXUS20') {
+      appliedDiscountRate = 0.20;
+      notice.style.color = 'var(--emerald)';
+      notice.innerHTML = '<i class="fa-solid fa-check"></i> Coupon applied: 20% discount granted!';
+      window.NexusStore.showToast('Voucher Applied', '20% discount applied to your order.');
+    } else if (val === '') {
+      appliedDiscountRate = 0;
+      notice.innerText = '';
+    } else {
+      appliedDiscountRate = 0;
+      notice.style.color = 'var(--rose)';
+      notice.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Invalid promo code. Try NEXUS20';
+    }
+    renderCheckoutSummary();
+  }
+
+  function renderCheckoutSummary() {
+    const container = document.getElementById('checkoutItemsList');
+    if (!container || !window.NexusStore) return;
+
+    const cart = window.NexusStore.cart;
+    const keys = Object.keys(cart);
+
+    const badge = document.getElementById('checkoutItemCountBadge');
+    if (badge) badge.innerText = `${window.NexusStore.getTotalCount()} items`;
+
+    if (keys.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2rem 1rem; color: var(--text-muted);">
+          Your bag is empty. Please add items before checking out.
+        </div>
+      `;
+      document.getElementById('checkoutSubtotal').innerText = '$0.00';
+      document.getElementById('checkoutGrandTotal').innerText = '$0.00';
+      return;
+    }
+
+    let html = '';
+    let subtotal = 0;
+
+    keys.forEach(k => {
+      const item = cart[k];
+      const itemTotal = item.price * item.qty;
+      subtotal += itemTotal;
+      const imgSrc = item.img ? (item.img.startsWith('/') ? item.img : '/media/' + item.img) : '/static/shop/watch.jpg';
+
+      html += `
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border-subtle);">
+          <div style="display: flex; align-items: center; gap: 0.8rem;">
+            <img src="${imgSrc}" style="width: 44px; height: 44px; object-fit: contain; background: rgba(255,255,255,0.03); border-radius: 8px; padding: 3px;" alt="${item.name}">
+            <div>
+              <div style="font-weight: 700; font-size: 0.9rem; color: #fff;">${item.name}</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">Qty: ${item.qty} &times; $${item.price}</div>
+            </div>
+          </div>
+          <div style="font-weight: 700; color: #a5b4fc; font-family: var(--font-display);">$${itemTotal.toFixed(2)}</div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+
+    const discountAmount = subtotal * appliedDiscountRate;
+    const grandTotal = Math.max(0, subtotal - discountAmount);
+
+    const subEl = document.getElementById('checkoutSubtotal');
+    const grandEl = document.getElementById('checkoutGrandTotal');
+    const discRow = document.getElementById('discountRow');
+    const discEl = document.getElementById('checkoutDiscount');
+
+    if (subEl) subEl.innerText = `$${subtotal.toFixed(2)}`;
+    if (grandEl) grandEl.innerText = `$${grandTotal.toFixed(2)}`;
+
+    if (discRow && discEl) {
+      if (appliedDiscountRate > 0) {
+        discRow.style.display = 'flex';
+        discEl.innerText = `-$${discountAmount.toFixed(2)}`;
+      } else {
+        discRow.style.display = 'none';
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderCheckoutSummary();
+  });
+</script>
 {% endblock %}

@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
 
 def home(request):
-    return HttpResponse("we are at home")
+    return render(request, 'shop/home.html')

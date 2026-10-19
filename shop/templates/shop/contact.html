@@ -1,2 +1,167 @@
 {% extends 'shop/basic.html' %}
-{% block title %} Contact Us {% endblock %}
+{% load static %}
+
+{% block title %}Contact Concierge | NEXUS LUXE{% endblock %}
+{% block nav_contact %}active{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+  
+  <div class="page-header">
+    <span class="badge-nexus badge-cyan" style="margin-bottom: 0.8rem;">24/7 SUPPORT</span>
+    <h1>Connect With <span class="gradient-text">Our Concierge</span></h1>
+    <p>We are here to assist with product inquiries, bespoke orders, and order logistics.</p>
+  </div>
+
+  <div class="contact-layout-grid">
+    
+    <!-- Left: Contact Details -->
+    <div>
+      <h3 style="font-size: 1.5rem; margin-bottom: 1.2rem;">Direct Channels</h3>
+      
+      <div class="contact-info-list">
+        <div class="contact-info-card">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <h5 style="margin: 0; color: #fff; font-size: 1rem;">Global Studio & Headquarters</h5>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 0.88rem;">100 Silicon Boulevard, Innovation District, CA 94107</p>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <i class="fa-solid fa-phone-volume"></i>
+          <div>
+            <h5 style="margin: 0; color: #fff; font-size: 1rem;">VIP Concierge Hotline</h5>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 0.88rem;">+1 (800) 892-NEXUS (Mon - Sat, 8am - 8pm EST)</p>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <i class="fa-solid fa-envelope-open-text"></i>
+          <div>
+            <h5 style="margin: 0; color: #fff; font-size: 1rem;">Direct Correspondence</h5>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 0.88rem;">concierge@nexusluxe.io / support@nexusluxe.io</p>
+          </div>
+        </div>
+
+        <div class="contact-info-card">
+          <i class="fa-solid fa-shield-halved"></i>
+          <div>
+            <h5 style="margin: 0; color: #fff; font-size: 1rem;">Warranty & Repairs</h5>
+            <p style="margin: 0; color: var(--text-secondary); font-size: 0.88rem;">Certified repair & battery renewal service center</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ Section -->
+      <div style="margin-top: 3rem;">
+        <h3 style="font-size: 1.4rem; margin-bottom: 1rem;">Frequently Asked</h3>
+        
+        <div class="faq-accordion">
+          <div class="faq-item open">
+            <button type="button" class="faq-question">
+              <span>What is the standard delivery timeframe?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              All domestic orders ship with 24-hour priority dispatch. Delivery typically takes 2–3 business days. International express orders are delivered via DHL Express within 3–5 business days.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question">
+              <span>What warranty covers Nexus hardware?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              Every device includes our 3-Year Premier Obsidian Warranty covering mechanical failure, battery degradation, and internal circuit components with complimentary replacement.
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button type="button" class="faq-question">
+              <span>Can I return an item if I change my mind?</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer">
+              Yes, we offer a 30-day no-questions-asked return window. Items must be returned in their original packaging with all included accessories.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Message Form -->
+    <div>
+      <div class="form-glass-card">
+        {% if thank %}
+        <div style="text-align: center; padding: 2rem 1rem;">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--emerald); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 1.2rem; box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <h3 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Message Received</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Thank you, <strong>{{ name }}</strong>. A dedicated Nexus concierge specialist has received your inquiry and will respond within 4 hours.
+          </p>
+          <a href="/shop/" class="btn-nexus-primary">
+            <i class="fa-solid fa-arrow-left"></i> Return to Catalog
+          </a>
+        </div>
+        {% else %}
+        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Transmit an Inquiry</h3>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.8rem;">
+          Fill out the secure form below. We prioritize VIP concierge correspondence.
+        </p>
+
+        <form action="/shop/contact/" method="post">
+          {% csrf_token %}
+          
+          <div class="form-group-row">
+            <div class="form-group">
+              <label for="contactName">Full Name *</label>
+              <input type="text" name="name" id="contactName" class="form-control-nexus" placeholder="Alex Vance" required>
+            </div>
+            <div class="form-group">
+              <label for="contactEmail">Email Address *</label>
+              <input type="email" name="email" id="contactEmail" class="form-control-nexus" placeholder="alex@nexus.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contactPhone">Phone Number</label>
+            <input type="tel" name="phone" id="contactPhone" class="form-control-nexus" placeholder="+1 (555) 019-2834">
+          </div>
+
+          <div class="form-group">
+            <label for="contactDesc">Message / Requirements *</label>
+            <textarea name="desc" id="contactDesc" rows="5" class="form-control-nexus" placeholder="How can our concierge team assist you today?" required></textarea>
+          </div>
+
+          <button type="submit" class="btn-nexus-primary" style="width: 100%; padding: 0.95rem; font-size: 1rem;">
+            <i class="fa-solid fa-paper-plane"></i> Send Secure Message
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+  // FAQ Accordion Interaction
+  document.addEventListener('DOMContentLoaded', () => {
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+  });
+</script>
+{% endblock %}

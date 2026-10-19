@@ -20,9 +20,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from . import views
 
+from shop import views as shop_views
+
 urlpatterns = [
     path("", views.home),
     path('admin/', admin.site.urls),
     path('shop/', include('shop.urls')),
     path('blog/', include('blog.urls')),
+    path('dashboard/', shop_views.admin_dashboard, name='RootDashboard'),
+    path('operations/', shop_views.admin_dashboard, name='RootOperations'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

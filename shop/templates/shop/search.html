@@ -1,0 +1,90 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+
+{% block title %}Search Results for "{{ query }}" | NEXUS LUXE{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+  
+  <div class="page-header">
+    <span class="badge-nexus badge-cyan" style="margin-bottom: 0.8rem;">TELEMETRY SEARCH</span>
+    <h1>Search <span class="gradient-text">Results</span></h1>
+    <p>Showing matching equipment for <strong style="color: #fff;">"{{ query }}"</strong></p>
+  </div>
+
+  <!-- Search Bar In-Page -->
+  <div style="max-width: 600px; margin: 0 auto 3rem;">
+    <form action="/shop/search/" method="get" style="display: flex; gap: 0.5rem;">
+      <input type="search" name="search" class="form-control-nexus" value="{{ query }}" placeholder="Search products, categories..." style="border-radius: var(--radius-full);" required>
+      <button type="submit" class="btn-nexus-primary">
+        <i class="fa-solid fa-magnifying-glass"></i> Search
+      </button>
+    </form>
+  </div>
+
+  <!-- Results Section -->
+  <div class="catalog-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h3 style="font-size: 1.4rem; color: #fff;">
+        Found <span class="gradient-text">{{ count }}</span> items
+      </h3>
+      <a href="/shop/#products" class="btn-nexus-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
+        <i class="fa-solid fa-arrow-left"></i> All Products
+      </a>
+    </div>
+
+    <div class="products-grid">
+      {% for item in products %}
+      <article class="product-card" data-category="{{ item.category|lower }}" data-id="{{ item.id }}">
+        
+        <div class="product-card-image-wrapper">
+          <span class="badge-nexus badge-purple product-card-category-tag">{{ item.category }}</span>
+          <img src="/media/{{ item.image }}" alt="{{ item.product_name }}" class="product-card-image" loading="lazy">
+          
+          <button type="button" class="product-card-quick-btn" 
+                  onclick="window.NexusStore.openQuickModal('{{ item.id }}', '{{ item.product_name|escapejs }}', '{{ item.price }}', '{{ item.desc|escapejs }}', '/media/{{ item.image }}', '{{ item.category|escapejs }}');">
+            <i class="fa-solid fa-eye"></i> Quick View
+          </button>
+        </div>
+
+        <div class="product-card-content">
+          <div>
+            <h3 class="product-card-title">
+              <a href="/shop/products/{{ item.id }}/">{{ item.product_name }}</a>
+            </h3>
+            <p class="product-card-desc">{{ item.desc }}</p>
+          </div>
+
+          <div class="product-card-footer">
+            <div class="product-card-price-box">
+              <span class="price-label">Price</span>
+              <span class="price-value">${{ item.price }}</span>
+            </div>
+
+            <button type="button" class="btn-add-cart cart" id="pr{{ item.id }}" 
+                    onclick="window.NexusStore.addToCart('{{ item.id }}', '{{ item.product_name|escapejs }}', '{{ item.price }}', '/media/{{ item.image }}', 1)">
+              <i class="fa-solid fa-cart-plus"></i> Add
+            </button>
+          </div>
+        </div>
+
+      </article>
+      {% empty %}
+      <div style="grid-column: 1 / -1; text-align: center; padding: 5rem 1rem;">
+        <div style="font-size: 3.5rem; color: var(--text-muted); margin-bottom: 1rem;">
+          <i class="fa-solid fa-compass"></i>
+        </div>
+        <h3 style="font-size: 1.8rem; margin-bottom: 0.5rem;">No exact matches found</h3>
+        <p style="color: var(--text-secondary); max-width: 450px; margin: 0 auto 2rem;">
+          We couldn't find any equipment matching "{{ query }}". Try searching for "Camera", "Headphones", "Watch", or "Laptop".
+        </p>
+        <a href="/shop/#products" class="btn-nexus-primary">
+          <i class="fa-solid fa-bolt"></i> View Full Collection
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

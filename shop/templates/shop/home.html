@@ -1,0 +1,330 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>NEXUS LUXE | Welcome</title>
+  <meta name="description" content="NEXUS LUXE — Premium lifestyle electronics, luxury wearables, and modern tech essentials. Admin & Shopper gateway.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="{% static 'shop/style.css' %}">
+
+  <style>
+    .home-gateway {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    .home-gateway::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, rgba(139, 92, 246, 0.08) 40%, transparent 70%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .home-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+      animation: fadeSlideUp 0.8s ease both;
+    }
+
+    .home-logo-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: var(--grad-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 2rem;
+      box-shadow: 0 0 40px rgba(99, 102, 241, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-logo-icon::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
+      animation: shine 4s infinite linear;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .home-logo-text {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .home-logo-text .highlight {
+      background: var(--grad-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .home-tagline {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 550px;
+      margin-bottom: 3.5rem;
+      line-height: 1.7;
+      animation: fadeSlideUp 0.8s 0.15s ease both;
+    }
+
+    .home-gateway-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 750px;
+      width: 100%;
+      animation: fadeSlideUp 0.8s 0.3s ease both;
+    }
+
+    .gateway-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 2.8rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.35s var(--ease-smooth);
+      cursor: pointer;
+    }
+
+    .gateway-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--border-glow);
+      box-shadow: var(--shadow-lg), 0 0 30px rgba(99, 102, 241, 0.25);
+    }
+
+    .gateway-card-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .gateway-card-icon.shop-icon {
+      background: var(--grad-primary);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    }
+
+    .gateway-card-icon.admin-icon {
+      background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+    }
+
+    .gateway-card h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .gateway-card p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .gateway-card .gateway-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+      transition: gap 0.25s ease;
+    }
+
+    .gateway-card:hover .gateway-action {
+      gap: 0.8rem;
+    }
+
+    .gateway-action.shop-action { color: #a5b4fc; }
+    .gateway-action.admin-action { color: #fcd34d; }
+
+    .home-footer-note {
+      position: absolute;
+      bottom: 2rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      animation: fadeSlideUp 0.8s 0.5s ease both;
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Floating particles */
+    .home-particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.4;
+      animation: particleFloat 8s ease-in-out infinite;
+    }
+
+    .home-particle:nth-child(1) {
+      width: 6px; height: 6px;
+      background: var(--primary);
+      top: 15%; left: 12%;
+      animation-duration: 7s;
+    }
+    .home-particle:nth-child(2) {
+      width: 4px; height: 4px;
+      background: var(--cyan);
+      top: 25%; right: 18%;
+      animation-duration: 9s;
+      animation-delay: 1s;
+    }
+    .home-particle:nth-child(3) {
+      width: 8px; height: 8px;
+      background: var(--fuchsia);
+      bottom: 20%; left: 22%;
+      animation-duration: 11s;
+      animation-delay: 2s;
+    }
+    .home-particle:nth-child(4) {
+      width: 5px; height: 5px;
+      background: var(--emerald);
+      bottom: 30%; right: 15%;
+      animation-duration: 8s;
+      animation-delay: 0.5s;
+    }
+    .home-particle:nth-child(5) {
+      width: 3px; height: 3px;
+      background: var(--amber);
+      top: 40%; left: 8%;
+      animation-duration: 10s;
+      animation-delay: 3s;
+    }
+
+    @keyframes particleFloat {
+      0%, 100% { transform: translate(0, 0); }
+      25% { transform: translate(15px, -20px); }
+      50% { transform: translate(-10px, -35px); }
+      75% { transform: translate(20px, -10px); }
+    }
+
+    @media (max-width: 640px) {
+      .home-gateway-cards {
+        grid-template-columns: 1fr;
+      }
+      .home-logo-text {
+        font-size: 2rem;
+      }
+      .home-logo-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Particles -->
+  <div class="home-particle"></div>
+  <div class="home-particle"></div>
+  <div class="home-particle"></div>
+  <div class="home-particle"></div>
+  <div class="home-particle"></div>
+
+  <div class="home-gateway">
+    
+    <!-- Brand Logo -->
+    <div class="home-logo-container">
+      <div class="home-logo-icon">
+        <i class="fa-solid fa-cube"></i>
+      </div>
+      <div class="home-logo-text">
+        NEXUS <span class="highlight">LUXE</span>
+      </div>
+    </div>
+
+    <!-- Tagline -->
+    <p class="home-tagline">
+      Premium lifestyle electronics, luxury wearables, and modern tech essentials — curated with obsidian precision and apex engineering.
+    </p>
+
+    <!-- Gateway Cards -->
+    <div class="home-gateway-cards">
+
+      <!-- Shop Gateway -->
+      <a href="/shop/" class="gateway-card" id="gatewayShop">
+        <div class="gateway-card-icon shop-icon">
+          <i class="fa-solid fa-bag-shopping"></i>
+        </div>
+        <h3>Browse Shop</h3>
+        <p>Explore our curated catalog of premium products, add to bag, and checkout securely.</p>
+        <span class="gateway-action shop-action">
+          Enter Store <i class="fa-solid fa-arrow-right"></i>
+        </span>
+      </a>
+
+      <!-- Admin Gateway -->
+      <a href="/admin/" class="gateway-card" id="gatewayAdmin">
+        <div class="gateway-card-icon admin-icon">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3>Admin Panel</h3>
+        <p>Login to manage inventory, add or edit products, view orders, and control the storefront.</p>
+        <span class="gateway-action admin-action">
+          Admin Login <i class="fa-solid fa-arrow-right"></i>
+        </span>
+      </a>
+
+    </div>
+
+    <!-- Footer Note -->
+    <div class="home-footer-note">
+      &copy; 2026 NEXUS LUXE TECHNOLOGIES INC. — Built with Django & Vanilla CSS
+    </div>
+
+  </div>
+
+</body>
+</html>

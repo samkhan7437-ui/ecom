@@ -1,62 +1,574 @@
-<!doctype html>
+{% load static %}
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>{% block title %}NEXUS LUXE | Premium Lifestyle & Tech Store{% endblock %}</title>
+  <meta name="description" content="{% block description %}Discover next-generation electronics, luxury wearables, and modern lifestyle essentials at Nexus Luxe.{% endblock %}">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <!-- Favicon / Fonts / Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <title>{% block title%} {% endblock %}</title>
-     <style>
-       {% block css %} {% endblock %}
+  <!-- Nexus Core Stylesheet -->
+  <link rel="stylesheet" href="{% static 'shop/style.css' %}">
+
+  {% block extra_head %}{% endblock %}
+  <style>
+    {% block css %}{% endblock %}
   </style>
-  </head>
-  <body>
+</head>
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/shop">E com</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/shop">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/shop/about/">About Us</a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="/shop/tracker/">Tacker</a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" href="/shop/contact/">Contact Us</a>
-      </li>
-  
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-    <button type="button" class="btn btn-secondary mx-2" id="popcart" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="Vivamus
-sagittis lacus vel augue laoreet rutrum faucibus.">
-  Cart(<span id="cart">0</span>)
-</button>
-
+  <!-- Ambient Top Announcement Bar -->
+  <div style="background: linear-gradient(90deg, #4f46e5, #7c3aed, #db2777); color: #ffffff; padding: 0.45rem 1rem; text-align: center; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.4px; display: flex; justify-content: center; align-items: center; gap: 14px; flex-wrap: wrap;">
+    <span>⚡ FLASH SALE: Get Up To 40% Off Select Tech & Wearables. Free Shipping on Orders Over ₹5,000!</span>
+    <a href="/shop/admin-dashboard/" style="background: rgba(0,0,0,0.35); color: #ffffff; padding: 3px 12px; border-radius: 99px; text-decoration: none; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.3); display: inline-flex; align-items: center; gap: 5px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+      <i class="fa-solid fa-gauge-high" style="color: #38bdf8;"></i> Admin Operations Hub
+    </a>
   </div>
-</nav>
-  {% block body %} {% endblock %}
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-    {% block js %} {% endblock %}
-  </body>
+  <!-- Main Navigation Header -->
+  <header class="nexus-navbar" id="nexusNavbar">
+    <div class="nav-container">
+      
+      <!-- Brand Logo -->
+      <a href="/shop/" class="nav-brand" id="navBrandLogo">
+        <div class="brand-icon-wrapper">
+          <i class="fa-solid fa-cube"></i>
+        </div>
+        <span>NEXUS <span class="highlight">LUXE</span></span>
+      </a>
+
+      <!-- Navigation Links -->
+      <ul class="nav-links" id="navLinksList">
+        <li class="nav-link-item {% block nav_home %}{% endblock %}">
+          <a href="/shop/" id="navLinkHome"><i class="fa-solid fa-house" style="margin-right: 4px;"></i> Home</a>
+        </li>
+        <li class="nav-link-item {% block nav_about %}{% endblock %}">
+          <a href="/shop/about/" id="navLinkAbout"><i class="fa-solid fa-circle-info" style="margin-right: 4px;"></i> About Us</a>
+        </li>
+        <li class="nav-link-item {% block nav_tracker %}{% endblock %}">
+          <a href="/shop/tracker/" id="navLinkTracker"><i class="fa-solid fa-truck-fast" style="margin-right: 4px;"></i> Order Tracker</a>
+        </li>
+        <li class="nav-link-item {% block nav_contact %}{% endblock %}">
+          <a href="/shop/contact/" id="navLinkContact"><i class="fa-solid fa-envelope" style="margin-right: 4px;"></i> Contact</a>
+        </li>
+        <li class="nav-link-item {% block nav_admin %}{% endblock %}">
+          <a href="/shop/admin-dashboard/" id="navLinkAdmin"><i class="fa-solid fa-sliders" style="margin-right: 4px; color: #a5b4fc;"></i> Operations</a>
+        </li>
+      </ul>
+
+      <!-- Action Items: Search & Cart -->
+      <div class="nav-actions">
+        <!-- Search Form -->
+        <form class="nav-search-form" action="/shop/search/" method="get" id="navSearchForm">
+          <i class="fa-solid fa-magnifying-glass nav-search-icon"></i>
+          <input type="search" name="search" class="nav-search-input" placeholder="Search premium tech..." aria-label="Search products" id="navSearchInput" required>
+        </form>
+
+        <!-- Admin Hub Nav Button -->
+        <a href="/shop/admin-dashboard/" class="btn-nexus-admin-nav" id="btnNavAdmin" title="Store Operations & Inventory Hub">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span class="admin-nav-text">Admin Hub</span>
+        </a>
+
+        <!-- Cart Button -->
+        <button type="button" class="btn-nav-cart" id="btnOpenCart" aria-label="Open Shopping Cart">
+          <i class="fa-solid fa-bag-shopping" style="color: #a5b4fc;"></i>
+          <span>Cart</span>
+          <span class="cart-count-badge" id="cartCountBadge">0</span>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button type="button" class="mobile-menu-toggle" id="btnMobileToggle" aria-label="Toggle Navigation Menu">
+          <i class="fa-solid fa-bars-staggered"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main>
+    {% block body %}{% endblock %}
+  </main>
+
+  <!-- Slide-Out Cart Drawer & Overlay -->
+  <div class="cart-drawer-overlay" id="cartOverlay">
+    <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-labelledby="cartDrawerTitle" aria-modal="true">
+      
+      <!-- Drawer Header -->
+      <div class="cart-drawer-header">
+        <div class="cart-drawer-title" id="cartDrawerTitle">
+          <i class="fa-solid fa-bag-shopping" style="color: var(--primary);"></i>
+          <span>Your Bag</span>
+          <span class="badge-nexus badge-purple" id="drawerItemCount">0 items</span>
+        </div>
+        <button type="button" class="btn-close-drawer" id="btnCloseCart" aria-label="Close Shopping Bag">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Free Shipping Tracker -->
+      <div style="background: rgba(99, 102, 241, 0.08); padding: 0.8rem 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+        <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.4rem;">
+          <span id="shippingNoticeText">Spend ₹5,000 for Free Express Delivery</span>
+          <span id="shippingPercentText">0%</span>
+        </div>
+        <div style="height: 5px; width: 100%; background: rgba(255, 255, 255, 0.1); border-radius: 99px; overflow: hidden;">
+          <div id="shippingProgressBar" style="width: 0%; height: 100%; background: var(--grad-primary); transition: width 0.4s ease;"></div>
+        </div>
+      </div>
+
+      <!-- Drawer Items Container -->
+      <div class="cart-drawer-body" id="cartDrawerItems">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="cart-drawer-footer">
+        <div class="cart-summary-line">
+          <span>Subtotal</span>
+          <span id="drawerSubtotalPrice" style="color: var(--text-white); font-weight: 700;">₹0.00</span>
+        </div>
+        <div class="cart-summary-line">
+          <span>Estimated Shipping</span>
+          <span id="drawerShippingCost" style="color: var(--emerald); font-weight: 700;">FREE</span>
+        </div>
+        <div class="cart-total-line">
+          <span>Estimated Total</span>
+          <span id="drawerTotalPrice" class="gradient-text">₹0.00</span>
+        </div>
+
+        <a href="/shop/checkout/" class="btn-checkout-drawer" id="btnDrawerCheckout">
+          <span>Proceed to Checkout</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+
+        <button type="button" class="btn-clear-cart" id="btnClearEntireCart">
+          <i class="fa-regular fa-trash-can"></i> Clear Bag
+        </button>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- Quick View Product Modal -->
+  <div class="quick-modal-overlay" id="quickModalOverlay">
+    <div class="quick-modal-card" id="quickModalCard">
+      <button type="button" class="btn-close-modal" id="btnCloseQuickModal" aria-label="Close Preview">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-img-col">
+        <img src="" alt="Product Preview" id="quickModalImg">
+      </div>
+      <div class="modal-info-col">
+        <span class="badge-nexus badge-purple" id="quickModalCategory">Category</span>
+        <h3 class="modal-product-title" id="quickModalTitle">Product Name</h3>
+        <div class="modal-product-price" id="quickModalPrice">₹0</div>
+        <p class="modal-product-desc" id="quickModalDesc">Product description will appear here.</p>
+        
+        <div style="display: flex; gap: 1rem; align-items: center; margin-top: 1rem;">
+          <button type="button" class="btn-nexus-primary" id="btnQuickModalAdd" style="flex-grow: 1;">
+            <i class="fa-solid fa-cart-plus"></i> Add To Bag
+          </button>
+          <a href="#" id="quickModalDetailLink" class="btn-nexus-outline">
+            Full Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Premium Global Footer -->
+  <footer class="nexus-footer">
+    <div class="footer-container">
+      
+      <!-- Brand & Mission -->
+      <div class="footer-brand-col">
+        <div class="nav-brand">
+          <div class="brand-icon-wrapper">
+            <i class="fa-solid fa-cube"></i>
+          </div>
+          <span>NEXUS <span class="highlight">LUXE</span></span>
+        </div>
+        <p>Curating the future of modern lifestyle, intelligent acoustics, wearable technology, and precision design essentials.</p>
+        <div class="footer-social-links">
+          <a href="#" class="social-btn" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="social-btn" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-btn" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="social-btn" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="footer-col">
+        <h5>Explore</h5>
+        <ul class="footer-links-list">
+          <li><a href="/shop/">Featured Collections</a></li>
+          <li><a href="/shop/#products">All Products</a></li>
+          <li><a href="/shop/about/">Our Heritage</a></li>
+          <li><a href="/shop/tracker/">Live Order Tracker</a></li>
+          <li><a href="/shop/admin-dashboard/"><i class="fa-solid fa-sliders" style="margin-right: 5px; color: var(--primary);"></i> Operations Hub</a></li>
+        </ul>
+      </div>
+
+      <!-- Customer Support -->
+      <div class="footer-col">
+        <h5>Customer Care</h5>
+        <ul class="footer-links-list">
+          <li><a href="/shop/contact/">Help & Support</a></li>
+          <li><a href="/shop/tracker/">Track Order</a></li>
+          <li><a href="/shop/checkout/">Checkout Securely</a></li>
+          <li><a href="/admin/" target="_blank"><i class="fa-solid fa-shield-halved" style="margin-right: 5px; color: var(--emerald);"></i> Django Admin Panel</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter -->
+      <div class="footer-col">
+        <h5>Stay Inspired</h5>
+        <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0.8rem;">
+          Subscribe to receive VIP access to limited drops, architectural design updates, and exclusive promos.
+        </p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); window.NexusStore.showToast('Subscribed!', 'Welcome to the Nexus VIP circle.'); this.reset();">
+          <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+          <button type="submit" class="btn-nexus-primary" style="padding: 0.65rem 1.2rem;">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+    <!-- Footer Bottom Line -->
+    <div class="footer-bottom">
+      <div>
+        &copy; 2026 NEXUS LUXE TECHNOLOGIES INC. All rights reserved. Built with Django & Vanilla CSS.
+      </div>
+      <div style="display: flex; gap: 1.5rem; font-size: 0.85rem;">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Security Protocol</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Nexus Global Reactive E-Commerce Logic -->
+  <script>
+    (function() {
+      // Global Store Object
+      window.NexusStore = {
+        cart: {},
+
+        init: function() {
+          try {
+            const saved = localStorage.getItem('nexus_cart');
+            if (saved) {
+              this.cart = JSON.parse(saved);
+            } else {
+              // Check legacy cart format if exists
+              const legacy = localStorage.getItem('cart');
+              if (legacy) {
+                const parsed = JSON.parse(legacy);
+                // Convert legacy counts to new format if needed
+                for (let k in parsed) {
+                  this.cart[k] = { id: k.replace('pr',''), qty: parsed[k], name: 'Item', price: 0, img: '' };
+                }
+              }
+            }
+          } catch (e) {
+            this.cart = {};
+          }
+          this.syncCartBadge();
+          this.bindEvents();
+        },
+
+        save: function() {
+          localStorage.setItem('nexus_cart', JSON.stringify(this.cart));
+          // Keep legacy format synchronized
+          let legacy = {};
+          for (let k in this.cart) {
+            legacy[k] = this.cart[k].qty;
+          }
+          localStorage.setItem('cart', JSON.stringify(legacy));
+          this.syncCartBadge();
+          this.renderCartDrawer();
+        },
+
+        addToCart: function(id, name, price, img, qty = 1) {
+          const key = 'pr' + id;
+          if (this.cart[key]) {
+            this.cart[key].qty += qty;
+          } else {
+            this.cart[key] = {
+              id: id,
+              name: name || 'Product #' + id,
+              price: parseFloat(price) || 0,
+              img: img || '',
+              qty: qty
+            };
+          }
+          this.save();
+          this.showToast('Added to Bag', `${name || 'Product'} has been added.`);
+        },
+
+        updateQty: function(key, delta) {
+          if (!this.cart[key]) return;
+          this.cart[key].qty += delta;
+          if (this.cart[key].qty <= 0) {
+            delete this.cart[key];
+          }
+          this.save();
+        },
+
+        removeItem: function(key) {
+          if (this.cart[key]) {
+            const name = this.cart[key].name;
+            delete this.cart[key];
+            this.save();
+            this.showToast('Item Removed', `${name} was removed from your bag.`);
+          }
+        },
+
+        clearCart: function() {
+          this.cart = {};
+          this.save();
+          this.showToast('Bag Cleared', 'Your shopping bag is now empty.');
+        },
+
+        getTotalCount: function() {
+          let count = 0;
+          for (let k in this.cart) {
+            count += this.cart[k].qty || 0;
+          }
+          return count;
+        },
+
+        getSubtotal: function() {
+          let total = 0;
+          for (let k in this.cart) {
+            total += (this.cart[k].price || 0) * (this.cart[k].qty || 0);
+          }
+          return total;
+        },
+
+        syncCartBadge: function() {
+          const count = this.getTotalCount();
+          const badge = document.getElementById('cartCountBadge');
+          const legacyBadge = document.getElementById('cart');
+          if (badge) badge.innerText = count;
+          if (legacyBadge) legacyBadge.innerText = count;
+          const drawerCount = document.getElementById('drawerItemCount');
+          if (drawerCount) drawerCount.innerText = `${count} ${count === 1 ? 'item' : 'items'}`;
+        },
+
+        renderCartDrawer: function() {
+          const container = document.getElementById('cartDrawerItems');
+          if (!container) return;
+
+          const keys = Object.keys(this.cart);
+          if (keys.length === 0) {
+            container.innerHTML = `
+              <div class="cart-empty-state">
+                <div class="cart-empty-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                <h4 style="font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-white);">Your bag is empty</h4>
+                <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.5rem;">Explore our curated selection of high-performance tech and lifestyle products.</p>
+                <button type="button" class="btn-nexus-primary" onclick="window.NexusStore.closeDrawer(); window.location.href='/shop/#products';">
+                  <i class="fa-solid fa-sparkles"></i> Explore Catalog
+                </button>
+              </div>
+            `;
+          } else {
+            let html = '';
+            keys.forEach(k => {
+              const item = this.cart[k];
+              const imgSrc = item.img ? (item.img.startsWith('/') ? item.img : '/media/' + item.img) : '/static/shop/watch.jpg';
+              html += `
+                <div class="cart-item-card">
+                  <img src="${imgSrc}" class="cart-item-img" alt="${item.name}">
+                  <div class="cart-item-details">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">₹${(item.price * item.qty).toFixed(2)}</div>
+                    <div class="cart-qty-controls">
+                      <button type="button" class="btn-qty" onclick="window.NexusStore.updateQty('${k}', -1)"><i class="fa-solid fa-minus"></i></button>
+                      <span class="cart-qty-number">${item.qty}</span>
+                      <button type="button" class="btn-qty" onclick="window.NexusStore.updateQty('${k}', 1)"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-remove-item" onclick="window.NexusStore.removeItem('${k}')" title="Remove Item">
+                    <i class="fa-regular fa-trash-can"></i>
+                  </button>
+                </div>
+              `;
+            });
+            container.innerHTML = html;
+          }
+
+          // Calculate totals
+          const subtotal = this.getSubtotal();
+          const freeShipGoal = 5000;
+          const pct = Math.min(100, Math.round((subtotal / freeShipGoal) * 100));
+
+          const subtotalEl = document.getElementById('drawerSubtotalPrice');
+          const totalEl = document.getElementById('drawerTotalPrice');
+          const progressEl = document.getElementById('shippingProgressBar');
+          const percentEl = document.getElementById('shippingPercentText');
+          const noticeEl = document.getElementById('shippingNoticeText');
+
+          if (subtotalEl) subtotalEl.innerText = `₹${subtotal.toFixed(2)}`;
+          if (totalEl) totalEl.innerText = `₹${subtotal.toFixed(2)}`;
+          if (progressEl) progressEl.style.width = `${pct}%`;
+          if (percentEl) percentEl.innerText = `${pct}%`;
+
+          if (noticeEl) {
+            if (subtotal >= freeShipGoal) {
+              noticeEl.innerHTML = `<span style="color: var(--emerald);">✓ You unlocked Free Express Shipping!</span>`;
+            } else {
+              noticeEl.innerText = `Spend ₹${(freeShipGoal - subtotal).toFixed(2)} more for Free Shipping`;
+            }
+          }
+        },
+
+        openDrawer: function() {
+          this.renderCartDrawer();
+          const overlay = document.getElementById('cartOverlay');
+          if (overlay) overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        },
+
+        closeDrawer: function() {
+          const overlay = document.getElementById('cartOverlay');
+          if (overlay) overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        },
+
+        showToast: function(title, subtitle) {
+          const container = document.getElementById('toastContainer');
+          if (!container) return;
+
+          const toast = document.createElement('div');
+          toast.className = 'nexus-toast';
+          toast.innerHTML = `
+            <div class="toast-icon"><i class="fa-solid fa-check"></i></div>
+            <div class="toast-text">
+              <h6>${title}</h6>
+              <p>${subtitle}</p>
+            </div>
+          `;
+          container.appendChild(toast);
+
+          setTimeout(() => {
+            toast.style.transition = 'all 0.4s ease';
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+            setTimeout(() => toast.remove(), 400);
+          }, 3500);
+        },
+
+        openQuickModal: function(id, name, price, desc, img, category) {
+          const overlay = document.getElementById('quickModalOverlay');
+          const imgEl = document.getElementById('quickModalImg');
+          const titleEl = document.getElementById('quickModalTitle');
+          const priceEl = document.getElementById('quickModalPrice');
+          const descEl = document.getElementById('quickModalDesc');
+          const catEl = document.getElementById('quickModalCategory');
+          const addBtn = document.getElementById('btnQuickModalAdd');
+          const linkEl = document.getElementById('quickModalDetailLink');
+
+          if (imgEl) imgEl.src = img || '/static/shop/watch.jpg';
+          if (titleEl) titleEl.innerText = name;
+          if (priceEl) priceEl.innerText = `₹${price}`;
+          if (descEl) descEl.innerText = desc || 'Engineered with pinnacle design and high performance materials.';
+          if (catEl) catEl.innerText = category || 'Technology';
+          if (linkEl) linkEl.href = `/shop/products/${id}/`;
+
+          if (addBtn) {
+            addBtn.onclick = () => {
+              this.addToCart(id, name, price, img, 1);
+              overlay.classList.remove('active');
+              document.body.style.overflow = '';
+            };
+          }
+
+          if (overlay) overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        },
+
+        bindEvents: function() {
+          // Open cart drawer
+          const cartBtn = document.getElementById('btnOpenCart');
+          if (cartBtn) cartBtn.addEventListener('click', () => this.openDrawer());
+
+          // Close cart drawer
+          const closeBtn = document.getElementById('btnCloseCart');
+          if (closeBtn) closeBtn.addEventListener('click', () => this.closeDrawer());
+
+          const overlay = document.getElementById('cartOverlay');
+          if (overlay) {
+            overlay.addEventListener('click', (e) => {
+              if (e.target === overlay) this.closeDrawer();
+            });
+          }
+
+          // Clear cart
+          const clearBtn = document.getElementById('btnClearEntireCart');
+          if (clearBtn) clearBtn.addEventListener('click', () => this.clearCart());
+
+          // Quick Modal close
+          const modalOverlay = document.getElementById('quickModalOverlay');
+          const closeModalBtn = document.getElementById('btnCloseQuickModal');
+          if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+              if (modalOverlay) modalOverlay.classList.remove('active');
+              document.body.style.overflow = '';
+            });
+          }
+          if (modalOverlay) {
+            modalOverlay.addEventListener('click', (e) => {
+              if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+              }
+            });
+          }
+
+          // Mobile menu toggle
+          const mobBtn = document.getElementById('btnMobileToggle');
+          const navList = document.getElementById('navLinksList');
+          if (mobBtn && navList) {
+            mobBtn.addEventListener('click', () => {
+              navList.classList.toggle('mobile-open');
+            });
+          }
+
+          // Sticky Navbar scroll effect
+          window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('nexusNavbar');
+            if (navbar) {
+              if (window.scrollY > 40) {
+                navbar.classList.add('scrolled');
+              } else {
+                navbar.classList.remove('scrolled');
+              }
+            }
+          });
+        }
+      };
+
+      // Initialize on DOM load
+      document.addEventListener('DOMContentLoaded', () => {
+        window.NexusStore.init();
+      });
+    })();
+  </script>
+
+  {% block js %}{% endblock %}
+</body>
 </html>

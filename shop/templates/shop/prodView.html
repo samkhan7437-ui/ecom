@@ -1,0 +1,123 @@
+{% extends 'shop/basic.html' %}
+{% load static %}
+
+{% block title %}{{ product.product_name }} | NEXUS LUXE{% endblock %}
+{% block description %}{{ product.desc }}{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+
+  <!-- Breadcrumbs -->
+  <nav style="display: flex; gap: 0.6rem; font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 2.5rem; align-items: center;">
+    <a href="/shop/" style="color: var(--text-muted);"><i class="fa-solid fa-house"></i> Home</a>
+    <span>/</span>
+    <a href="/shop/#products" style="color: var(--text-muted);">{{ product.category }}</a>
+    <span>/</span>
+    <span style="color: #fff; font-weight: 600;">{{ product.product_name }}</span>
+  </nav>
+
+  <!-- Product Detail Showcase Grid -->
+  <div class="checkout-grid" style="align-items: center; margin-bottom: 5rem;">
+    
+    <!-- Left: Image Box -->
+    <div style="background: var(--grad-dark-card); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 3rem; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: var(--shadow-lg), var(--shadow-glow);">
+      <span class="badge-nexus badge-purple" style="position: absolute; top: 1.5rem; left: 1.5rem;">
+        {{ product.category }}
+      </span>
+      <span class="product-card-badge-sale" style="position: absolute; top: 1.5rem; right: 1.5rem;">
+        IN STOCK
+      </span>
+
+      <img src="/media/{{ product.image }}" alt="{{ product.product_name }}" style="max-height: 400px; width: auto; object-fit: contain; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6));">
+    </div>
+
+    <!-- Right: Specs & Purchasing -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <div>
+        <div style="display: flex; gap: 4px; color: var(--amber); font-size: 0.9rem; margin-bottom: 0.6rem;">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <span style="color: var(--text-secondary); margin-left: 6px; font-weight: 600;">(4.9 &bull; 84 Patron Reviews)</span>
+        </div>
+
+        <h1 style="font-size: 3rem; margin-bottom: 0.5rem; line-height: 1.15;">{{ product.product_name }}</h1>
+        <div style="font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; color: #a5b4fc;">
+          ${{ product.price }}
+        </div>
+      </div>
+
+      <p style="color: var(--text-secondary); font-size: 1.05rem; line-height: 1.7;">
+        {{ product.desc }}
+      </p>
+
+      <!-- Key Specifications Pill List -->
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.2rem;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.88rem;">
+          <span style="color: var(--text-muted);"><i class="fa-solid fa-shield-check" style="color: var(--emerald); margin-right: 6px;"></i> Warranty</span>
+          <span style="color: #fff; font-weight: 600;">3-Year Obsidian Coverage</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.88rem;">
+          <span style="color: var(--text-muted);"><i class="fa-solid fa-plane-up" style="color: var(--cyan); margin-right: 6px;"></i> Dispatch</span>
+          <span style="color: #fff; font-weight: 600;">Within 24 Hours Worldwide</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.88rem;">
+          <span style="color: var(--text-muted);"><i class="fa-solid fa-rotate-left" style="color: var(--violet); margin-right: 6px;"></i> Returns</span>
+          <span style="color: #fff; font-weight: 600;">30-Day Direct Guarantee</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button type="button" class="btn-nexus-primary" style="flex: 1; padding: 1rem 1.8rem; font-size: 1.05rem;"
+                onclick="window.NexusStore.addToCart('{{ product.id }}', '{{ product.product_name|escapejs }}', '{{ product.price }}', '/media/{{ product.image }}', 1)">
+          <i class="fa-solid fa-cart-plus"></i> Add to Bag
+        </button>
+        <button type="button" class="btn-nexus-outline" style="padding: 1rem 1.8rem; font-size: 1.05rem;"
+                onclick="window.NexusStore.addToCart('{{ product.id }}', '{{ product.product_name|escapejs }}', '{{ product.price }}', '/media/{{ product.image }}', 1); window.location.href='/shop/checkout/';">
+          <i class="fa-solid fa-bolt"></i> Instant Checkout
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Related Items -->
+  {% if related %}
+  <div style="margin-top: 4rem;">
+    <div class="section-header">
+      <div>
+        <span class="badge-nexus badge-cyan">COMPLEMENTARY GEAR</span>
+        <h2 class="section-title">You May Also Value</h2>
+      </div>
+    </div>
+
+    <div class="products-grid">
+      {% for item in related %}
+      <article class="product-card">
+        <div class="product-card-image-wrapper">
+          <span class="badge-nexus badge-purple product-card-category-tag">{{ item.category }}</span>
+          <img src="/media/{{ item.image }}" alt="{{ item.product_name }}" class="product-card-image" loading="lazy">
+        </div>
+        <div class="product-card-content">
+          <h3 class="product-card-title"><a href="/shop/products/{{ item.id }}/">{{ item.product_name }}</a></h3>
+          <p class="product-card-desc">{{ item.desc }}</p>
+          <div class="product-card-footer">
+            <span class="price-value">${{ item.price }}</span>
+            <button type="button" class="btn-add-cart" 
+                    onclick="window.NexusStore.addToCart('{{ item.id }}', '{{ item.product_name|escapejs }}', '{{ item.price }}', '/media/{{ item.image }}', 1)">
+              Add
+            </button>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,130 +1,309 @@
 {% extends 'shop/basic.html' %}
-{% block css %}
-          .col-md-3
-          {
-          display: inline-block;
-          margin-left:-4px;
-          }
+{% load static %}
 
-          .carousel-indicators .active {
-          background-color: blue;
-            }
-
-          .col-md-3 img{
-
-          width: 170px;
-          height: 200px;
-          }
-
-          body .carousel-indicator li{
-          background-color: blue;
-          }
-
-          body .carousel-indicators{
-          bottom: 0;
-          }
-
-          body .carousel-control-prev-icon,
-          body .carousel-control-next-icon{
-          background-color: blue;
-          }
-
-          .carousel-control-prev,
-          .carousel-control-next{
-          top: auto;
-          bottom: auto;
-          padding-top: 150px;
-          }
-           body .no-padding{
-           padding-left: 0,
-           padding-right: 0;
-           }
- {% endblock %}
+{% block title %}NEXUS LUXE | Premium Lifestyle, Wearables & Audio{% endblock %}
+{% block nav_home %}active{% endblock %}
 
 {% block body %}
-{% load static %}
-<div class="container">
+<!-- ==========================================================================
+     HERO SHOWCASE SECTION
+     ========================================================================== -->
+<section class="hero-section" id="hero">
+  <div class="hero-container">
+    
+    <!-- Hero Text Content -->
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span class="tag-dot"></span>
+        <span>NEXT-GEN COLLECTION 2026</span>
+      </div>
 
-    <!--Slideshow starts here -->
-    {% for product, range, nSlides in allProds %}
-    <h5 class="my-4">Flash Sale On {{product.0.category}} - Recommended Items</h5>
-    <div class="row">
-<div id="demo{{forloop.counter}}" class="col carousel slide my-3" data-ride="carousel">
-    <ul class="carousel-indicators">
-      <li data-target="#demo{{forloop.counter}}" data-slide-to="0" class="active"></li>
+      <h1 class="hero-title">
+        The Apex of <span class="gradient-text">Design & Precision</span> Performance.
+      </h1>
 
-       {% for i in range %}
-      <li data-target="#demo{{forloop.parentloop.counter}}" data-slide-to="{{i}}" ></li>
-      {% endfor %}
-    </ul>
+      <p class="hero-desc">
+        Engineered for those who demand excellence. Explore curated high-fidelity acoustics, luxury titanium wearables, and state-of-the-art everyday tech essentials.
+      </p>
 
+      <div class="hero-cta-group">
+        <a href="#products" class="btn-nexus-primary">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Shop Collection</span>
+        </a>
+        <a href="/shop/about/" class="btn-nexus-outline">
+          <span>Our Vision</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
 
-    <div class="container carousel-inner no-padding">
-
-      <div class="carousel-item active">
-
-
-        {% for i in product %}
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <div class="card" style="width: 18rem;">
-            <img src='/media/{{i.image}}' class="card-img-top" alt="...">
-            <div class="card-body">
-              <h5 class="card-title">{{i.product_name}}</h5>
-              <p class="card-text">{{i.desc}}</p>
-              <button id="pr{{i.id}}" class="btn btn-primary cart">Add To Cart</button>
-            </div>
-          </div>
+      <!-- Trust Stats -->
+      <div class="hero-stats">
+        <div class="stat-item">
+          <h4>150K+</h4>
+          <p>Global Owners</p>
         </div>
-        {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
-      </div><div class="carousel-item">
-        {% endif %}
-
-        {% endfor %}
+        <div class="stat-item">
+          <h4>99.8%</h4>
+          <p>Customer Satisfaction</p>
+        </div>
+        <div class="stat-item">
+          <h4>24h</h4>
+          <p>Express Dispatch</p>
+        </div>
+      </div>
     </div>
 
-
-
-</div>
-</div>
-    <!-- left and right controls for the slide -->
-    <a class="carousel-control-prev" href="#demo{{forloop.counter}}" data-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </a>
-    <a class="carousel-control-next" href="#demo{{forloop.counter}}" data-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </a>
+    <!-- Hero Visual Frame -->
+    <div class="hero-visual">
+      <div class="hero-card-frame">
+        <img src="{% static 'shop/hero_showcase.jpg' %}" alt="Nexus Luxe Flagship Showcase" loading="eager">
+        <div class="floating-glass-badge">
+          <div class="badge-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div>
+            <h5>Aura Grade Craftsmanship</h5>
+            <p>Titanium chassis & obsidian glass</p>
+          </div>
         </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==========================================================================
+     TRUST & VALUE PROPOSITION ROW
+     ========================================================================== -->
+<section class="trust-row-section">
+  <div class="trust-grid">
+    <div class="trust-item">
+      <div class="trust-icon-box"><i class="fa-solid fa-plane-up"></i></div>
+      <div class="trust-info">
+        <h5>Worldwide Express</h5>
+        <p>Free on all orders over $100</p>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon-box"><i class="fa-solid fa-arrow-rotate-left"></i></div>
+      <div class="trust-info">
+        <h5>30-Day Guarantee</h5>
+        <p>Hassle-free direct returns</p>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon-box"><i class="fa-solid fa-shield-check"></i></div>
+      <div class="trust-info">
+        <h5>Secure Checkout</h5>
+        <p>End-to-end 256-bit encryption</p>
+      </div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon-box"><i class="fa-solid fa-headset"></i></div>
+      <div class="trust-info">
+        <h5>24/7 VIP Concierge</h5>
+        <p>Dedicated luxury customer care</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     INTERACTIVE CATEGORY FILTER BAR
+     ========================================================================== -->
+<section class="category-filter-section" id="products">
+  <div class="filter-container">
+    <div>
+      <h2 style="font-size: 1.8rem; margin-bottom: 0.2rem;">Curated Catalog</h2>
+      <p style="color: var(--text-secondary); font-size: 0.9rem;">Filter by category or explore our complete flagship lineup</p>
+    </div>
+
+    <!-- Filter Buttons -->
+    <ul class="filter-pills-list" id="categoryFilterList">
+      <li>
+        <button type="button" class="filter-pill-btn active" data-filter="all">
+          <i class="fa-solid fa-layer-group" style="margin-right: 4px;"></i> All Items ({{ total_products }})
+        </button>
+      </li>
+      {% for cat in categories %}
+      <li>
+        <button type="button" class="filter-pill-btn" data-filter="{{ cat|lower }}">
+          {{ cat }}
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     MAIN PRODUCTS GRID (GLASSMORPHISM CARDS)
+     ========================================================================== -->
+<section class="shop-catalog-section">
+  <div class="catalog-container">
+    <div class="products-grid" id="mainProductsGrid">
+      {% for item in products %}
+      <article class="product-card" data-category="{{ item.category|lower }}" data-id="{{ item.id }}">
+        
+        <!-- Image & Badges -->
+        <div class="product-card-image-wrapper">
+          <span class="badge-nexus badge-purple product-card-category-tag">{{ item.category }}</span>
+          <span class="product-card-badge-sale">HOT</span>
+
+          <img src="/media/{{ item.image }}" alt="{{ item.product_name }}" class="product-card-image" loading="lazy">
+
+          <!-- Quick View Hover Trigger -->
+          <button type="button" class="product-card-quick-btn" 
+                  onclick="window.NexusStore.openQuickModal('{{ item.id }}', '{{ item.product_name|escapejs }}', '{{ item.price }}', '{{ item.desc|escapejs }}', '/media/{{ item.image }}', '{{ item.category|escapejs }}');">
+            <i class="fa-solid fa-eye"></i> Quick View
+          </button>
+        </div>
+
+        <!-- Product Content -->
+        <div class="product-card-content">
+          <div>
+            <div style="display: flex; gap: 3px; color: var(--amber); font-size: 0.75rem; margin-bottom: 0.5rem;">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star-half-stroke"></i>
+              <span style="color: var(--text-muted); margin-left: 4px; font-weight: 600;">(4.9)</span>
+            </div>
+
+            <h3 class="product-card-title">
+              <a href="/shop/products/{{ item.id }}/">{{ item.product_name }}</a>
+            </h3>
+
+            <p class="product-card-desc">{{ item.desc }}</p>
+          </div>
+
+          <!-- Price & Actions -->
+          <div class="product-card-footer">
+            <div class="product-card-price-box">
+              <span class="price-label">Price</span>
+              <span class="price-value">${{ item.price }}</span>
+            </div>
+
+            <button type="button" class="btn-add-cart cart" id="pr{{ item.id }}" 
+                    onclick="window.NexusStore.addToCart('{{ item.id }}', '{{ item.product_name|escapejs }}', '{{ item.price }}', '/media/{{ item.image }}', 1)">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>Add to Bag</span>
+            </button>
+          </div>
+        </div>
+
+      </article>
+      {% empty %}
+      <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem;">
+        <h3>No products found</h3>
+        <p style="color: var(--text-secondary);">Please check back soon for our next drop.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     PROMOTIONAL LIFESTYLE SHOWCASE BANNER
+     ========================================================================== -->
+<section class="promo-banner-section">
+  <div class="promo-card">
+    <div class="promo-content">
+      <span class="badge-nexus badge-cyan">LIMITED DROP SPOTLIGHT</span>
+      <h3>Synapse Smart Ecosystem</h3>
+      <p>
+        Seamless wireless synchronization between high-precision biometric sensors, studio-grade planar acoustics, and obsidian ceramic charging docks.
+      </p>
+      <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+        <a href="#products" class="btn-nexus-primary">
+          <i class="fa-solid fa-bag-shopping"></i> Shop Limited Edition
+        </a>
+        <span style="color: var(--text-muted); font-size: 0.9rem;">*Only 250 units remaining worldwide</span>
+      </div>
+    </div>
+    <div class="promo-image-box">
+      <img src="{% static 'shop/lifestyle_showcase.jpg' %}" alt="Lifestyle Smartwatch Showcase" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     CATEGORY SECTION SLIDES / SHOWCASES
+     ========================================================================== -->
+<section class="shop-catalog-section" style="padding-top: 0;">
+  <div class="catalog-container">
+    {% for product, range, nSlides, cat in allProds %}
+    <div style="margin-bottom: 3.5rem;">
+      <div class="section-header">
+        <div>
+          <span class="badge-nexus badge-purple" style="margin-bottom: 0.5rem;">FLASH DEAL</span>
+          <h2 class="section-title">Spotlight On <span class="gradient-text">{{ cat }}</span></h2>
+          <p class="section-subtitle">Specially curated gear designed for elevated lifestyle performance</p>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        {% for item in product %}
+        <article class="product-card">
+          <div class="product-card-image-wrapper">
+            <span class="badge-nexus badge-cyan product-card-category-tag">{{ item.subcategory|default:item.category }}</span>
+            <img src="/media/{{ item.image }}" alt="{{ item.product_name }}" class="product-card-image" loading="lazy">
+            <button type="button" class="product-card-quick-btn" 
+                    onclick="window.NexusStore.openQuickModal('{{ item.id }}', '{{ item.product_name|escapejs }}', '{{ item.price }}', '{{ item.desc|escapejs }}', '/media/{{ item.image }}', '{{ item.category|escapejs }}');">
+              <i class="fa-solid fa-eye"></i> Quick View
+            </button>
+          </div>
+          <div class="product-card-content">
+            <h3 class="product-card-title">
+              <a href="/shop/products/{{ item.id }}/">{{ item.product_name }}</a>
+            </h3>
+            <p class="product-card-desc">{{ item.desc }}</p>
+            <div class="product-card-footer">
+              <div class="product-card-price-box">
+                <span class="price-label">Price</span>
+                <span class="price-value">${{ item.price }}</span>
+              </div>
+              <button type="button" class="btn-add-cart cart" id="pr{{ item.id }}" 
+                      onclick="window.NexusStore.addToCart('{{ item.id }}', '{{ item.product_name|escapejs }}', '{{ item.price }}', '/media/{{ item.image }}', 1)">
+                <i class="fa-solid fa-cart-plus"></i> Add
+              </button>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
     {% endfor %}
-</div>
- {% endblock %}
+  </div>
+</section>
+{% endblock %}
 
 {% block js %}
 <script>
-console.log('working');
-if(localStorage.getItem('cart') == null){
-var cart = {};
-}
-else
-{
-cart = JSON.parse(localStorage.getItem('cart'));
-document.getElementById('cart').innerHTML = Object.keys(cart).length;
-}
-$('.cart').click(function(){
-console.log('clicked');
-var idstr = this.id.toString();
-console.log(idstr);
-if (cart[idstr] !=undefined){
-cart[idstr] = cart[idstr] + 1;
-}
-else
-{
-cart[idstr] = 1;
-}
-console.log(cart);
-localStorage.setItem('cart', JSON.stringify(cart));
-document.getElementById('cart').innerHTML = Object.keys(cart).length;
-});
-$('#popcart').popover();
-document.getElementById("popcart").setAttribute('data-content', '<h5>Cart for your items in my shopping cart</h5>');
+  // Dynamic Category Filter Script with smooth transitions
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterButtons = document.querySelectorAll('.filter-pill-btn');
+    const productCards = document.querySelectorAll('#mainProductsGrid .product-card');
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Active class update
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.getAttribute('data-filter');
+
+        productCards.forEach(card => {
+          const cardCat = card.getAttribute('data-category');
+          if (filter === 'all' || cardCat === filter) {
+            card.style.display = 'flex';
+            card.style.animation = 'fadeIn 0.3s ease';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
 </script>
 {% endblock %}

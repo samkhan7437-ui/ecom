@@ -1,4 +1,108 @@
 {% extends 'shop/basic.html' %}
+{% load static %}
 
-{% block title %} About Us {% endblock %}
-{% block body %} This is the test {% endblock %}
+{% block title %}About Us | NEXUS LUXE Design & Innovation{% endblock %}
+{% block nav_about %}active{% endblock %}
+
+{% block body %}
+<div class="page-wrapper">
+  
+  <!-- About Hero -->
+  <div class="page-header">
+    <span class="badge-nexus badge-purple" style="margin-bottom: 0.8rem;">ENGINEERED ELEGANCE</span>
+    <h1>Redefining <span class="gradient-text">Modern Tech & Luxury</span></h1>
+    <p>We bridge the chasm between raw technological power and bespoke industrial design.</p>
+  </div>
+
+  <!-- Story & Vision Grid -->
+  <div class="about-hero-grid">
+    <div>
+      <span class="badge-nexus badge-cyan" style="margin-bottom: 1rem;">OUR PHILOSOPHY</span>
+      <h2 style="font-size: 2.2rem; margin-bottom: 1rem; line-height: 1.25;">Born from an obsession with perfection.</h2>
+      <p style="color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 1.2rem; line-height: 1.7;">
+        Founded in 2024, Nexus Luxe set out with a radical mission: why should daily tools and technology look cold, utilitarian, and disposable? We set out to build iconic lifestyle electronics crafted from space-grade titanium, sapphire crystal, and tactile obsidian ceramics.
+      </p>
+      <p style="color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 2rem; line-height: 1.7;">
+        Every piece in our catalog is scrutinized by acoustical engineers, horologists, and industrial artists to deliver unmatched tactile pleasure and peerless longevity.
+      </p>
+      <div style="display: flex; gap: 1rem;">
+        <a href="/shop/#products" class="btn-nexus-primary">
+          <i class="fa-solid fa-bolt"></i> Discover Our Catalog
+        </a>
+        <a href="/shop/contact/" class="btn-nexus-outline">
+          Connect With Us
+        </a>
+      </div>
+    </div>
+
+    <!-- Visual Showcase -->
+    <div style="position: relative;">
+      <div class="hero-card-frame">
+        <img src="{% static 'shop/lifestyle_showcase.jpg' %}" alt="Nexus Studio Lab" style="border-radius: var(--radius-lg); aspect-ratio: 4/3; object-fit: cover;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Metrics Row -->
+  <div class="trust-grid" style="margin: 4rem 0;">
+    <div class="trust-item" style="flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 2rem;">
+      <span class="gradient-text" style="font-size: 2.6rem; font-weight: 800; font-family: var(--font-display);">150,000+</span>
+      <h5 style="font-size: 1.1rem; margin: 0;">Global Patrons</h5>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0;">Discerning owners across 64 countries.</p>
+    </div>
+
+    <div class="trust-item" style="flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 2rem;">
+      <span class="gradient-cyan-text" style="font-size: 2.6rem; font-weight: 800; font-family: var(--font-display);">99.8%</span>
+      <h5 style="font-size: 1.1rem; margin: 0;">5-Star Reviews</h5>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0;">Uncompromising quality control and care.</p>
+    </div>
+
+    <div class="trust-item" style="flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 2rem;">
+      <span class="gradient-text" style="font-size: 2.6rem; font-weight: 800; font-family: var(--font-display);">100%</span>
+      <h5 style="font-size: 1.1rem; margin: 0;">Carbon Balanced</h5>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0;">Every shipment offsets 1.5x carbon emissions.</p>
+    </div>
+
+    <div class="trust-item" style="flex-direction: column; align-items: flex-start; gap: 0.5rem; padding: 2rem;">
+      <span class="gradient-cyan-text" style="font-size: 2.6rem; font-weight: 800; font-family: var(--font-display);">3-Year</span>
+      <h5 style="font-size: 1.1rem; margin: 0;">Premier Warranty</h5>
+      <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0;">Guaranteed hardware protection and care.</p>
+    </div>
+  </div>
+
+  <!-- Core Values -->
+  <div style="margin-top: 5rem;">
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+      <span class="badge-nexus badge-purple">OUR CORE PILLARS</span>
+      <h2 style="font-size: 2.2rem; margin-top: 0.5rem;">Built Upon Uncompromising Standards</h2>
+    </div>
+
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon"><i class="fa-solid fa-microchip"></i></div>
+        <h3>Architectural Silicon</h3>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.95rem; line-height: 1.6;">
+          We collaborate with boutique semiconductor labs to integrate low-latency chips and crystal-clear acoustic drivers that surpass industry benchmarks.
+        </p>
+      </div>
+
+      <div class="value-card">
+        <div class="value-icon"><i class="fa-solid fa-gem"></i></div>
+        <h3>Artisanal Finishes</h3>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.95rem; line-height: 1.6;">
+          Hand-polished chamfered edges, PVD vapor deposition coatings, and tactile tactile buttons calibrated down to the gram of resistance.
+        </p>
+      </div>
+
+      <div class="value-card">
+        <div class="value-icon"><i class="fa-solid fa-earth-americas"></i></div>
+        <h3>Ethical Longevity</h3>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem; font-size: 0.95rem; line-height: 1.6;">
+          Zero planned obsolescence. Modular components and easily replaceable battery modules ensure your investment endures for years.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
